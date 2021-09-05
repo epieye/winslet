@@ -51,14 +51,14 @@ module "transit_gateway" {
       destination_cidr_block = "192.168.0.0/24"
       transit_gateway_attachment_id = module.woznet_tgw_attachment.id
     },
-    //{
-    //  destination_cidr_block = "192.168.1.0/24"
-    //  transit_gateway_attachment_id = module.ourzoo_tgw_attachment.id
-    //},
-    //{
-    //  destination_cidr_block = "192.168.2.0/24"
-    //  transit_gateway_attachment_id = module.kinaida_tgw_attachment.id
-    //}
+    {
+      destination_cidr_block = "192.168.1.0/24"
+      transit_gateway_attachment_id = module.ourzoo_tgw_attachment.id
+    },
+    {
+      destination_cidr_block = "192.168.2.0/24"
+      transit_gateway_attachment_id = module.kinaida_tgw_attachment.id
+    }
   ]
 
   tags = merge(
@@ -145,8 +145,8 @@ module "woznet_ec2" {
   source = "./modules/ec2_instance"
 
   ami_id = data.aws_ami.amznix2.id
-  key_name  = "Borneo"
-  subnet_id = module.woznet.public_subnet_ids[0]
+  key_name  = "Monaco"
+  subnet_id = module.woznet.private_subnet_ids[0]
   user_data = data.template_file.user_data.rendered
   public_ip = true
 
@@ -160,22 +160,42 @@ module "woznet_ec2" {
   )
 }
 
-output "tgw_id" {
-  value = module.transit_gateway.id
+// 
+module "woznet_bastion" {
+  source = "./modules/ec2_instance"
+
+  ami_id = data.aws_ami.amznix2.id
+  key_name  = "Monaco"
+  subnet_id = module.woznet.public_subnet_ids[0]
+  user_data = data.template_file.user_data.rendered
+  public_ip = true
+
+  vpc_sec_group = module.woznet_sg.id
+
+  tags = merge (
+    module.configuration.tags,
+    {
+      Name = "woznet_ec2_jump"
+    }
+  )
 }
 
-output "woznet_tgw_attach_id" {
-  value = module.woznet_tgw_attachment.id
-}
+#output "tgw_id" {
+#  value = module.transit_gateway.id
+#}
 
-output "woznet_vpc_id" {
-  value = module.woznet.vpc_id
-}
+#output "woznet_tgw_attach_id" {
+#  value = module.woznet_tgw_attachment.id
+#}
 
-output "woznet_public_address" {
-  value = module.woznet_ec2
-}
+#output "woznet_vpc_id" {
+#  value = module.woznet.vpc_id
+#}
 
-output "woznet_settings" {
-  value = module.woznet
-}
+#output "woznet_public_address" {
+#  value = module.woznet_ec2.public_ip
+#}
+
+#output "woznet_settings" {
+#  value = module.woznet
+#}
