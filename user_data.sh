@@ -62,8 +62,6 @@ chmod 400 /home/warren/.ssh/authorized_keys
 mkdir /home/warren/.aws
 chown warren:warren /home/warren/.aws
 echo "[default]" > /home/warren/.aws/credentials
-echo "aws_access_key_id = AKIA2Z2BK3GB2NPSJAOM" >> /home/warren/.aws/credentials
-echo "aws_secret_access_key = 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" >> /home/warren/.aws/credentials
 echo "[default]" > /home/warren/.aws/config
 echo "output = json" >> /home/warren/.aws/config
 echo "region = us-east-1" >> /home/warren/.aws/config
