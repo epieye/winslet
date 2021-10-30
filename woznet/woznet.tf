@@ -78,6 +78,46 @@ module "transit_gateway" {
   )
 }
 
+
+
+
+# Create additional subnets in inpection VPC for VPN portal on PA NGFW.
+resource "aws_subnet" "private_subnet1" {
+  vpc_id = aws_vpc.inspection_vpc.id
+  count = "1"
+  cidr_block = "192.168.3.0/25"
+  availability_zone = "us-east-1a"
+
+  map_public_ip_on_launch = false
+
+  tags = merge(
+    module.configuration.tags,
+    {
+      Name = "vpn1-portal-subnet-private-us-east-1a"
+    }
+  )
+}
+
+resource "aws_subnet" "private_subnet2" {
+  vpc_id = aws_vpc.inspection_vpc.id
+  count = "1"
+  cidr_block = "192.168.3.128/25"
+  availability_zone = "us-east-1b"
+
+  map_public_ip_on_launch = false
+
+  tags = merge(
+    module.configuration.tags,
+    {
+      Name = "vpn2-portal-subnet-private-us-east-1b"
+    }
+  )
+}
+
+
+
+
+
 output "tgw_id" {
   value = module.transit_gateway.id
 }

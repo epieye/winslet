@@ -7,6 +7,7 @@ resource "tls_self_signed_cert" "warren_temp_cert" {
   key_algorithm   = "RSA"
   private_key_pem = tls_private_key.warren_temp_key.private_key_pem
 
+  # make one with ourzoo
   subject {
     common_name  = "onedatascan.io"
     organization = "Datascan"
@@ -46,6 +47,31 @@ resource "aws_acm_certificate" "cert" {
 #    }
 #  )
 #}
+
+# Target group. The two palo alto devices.
+resource "aws_lb_target_group" "target-ip" {
+  name        = "tf-example-lb-tg"
+  port        = 443
+  protocol    = "HTTPS"
+  target_type = "ip"
+  vpc_id      = module.ingress_vpc.vpc_id
+}
+
+# Palo-a. If the target type is ip, specify an IP address.
+resource "aws_lb_target_group_attachment" "target-ip1" {
+  target_group_arn  = aws_lb_target_group.target-ip.arn
+  target_id         = "192.168.3.10"
+  availability_zone = "all"
+  port              = 80
+}
+
+# Palo-b. Change to a ref.
+resource "aws_lb_target_group_attachment" "target-ip2" {
+  target_group_arn  = aws_lb_target_group.target-ip.arn
+  target_id         = "192.168.3.11"
+  availability_zone = "all"
+  port              = 80
+}
 
 # The ALB itself. I still need to specify the target group.
 resource "aws_lb" "vpn_alb" {
@@ -92,7 +118,4 @@ resource "aws_lb_listener" "vpn_front_end" {
   }
 }
 
-# Matthias' ingress LB also has an updater with an associated iam role.
-# But VPN portal is configured on the Palo, not via terraform. 
-
-# Do I need an additional cidr / subnets for this alb? I can probably use the exisitng ones for this example. 
+# route 53
