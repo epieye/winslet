@@ -56,18 +56,14 @@ module "woznet_ec2" {
   source = "../modules/ec2_instance"
 
   ami_id = data.aws_ami.amznix2.id
-  #ami_id = "ami-08608909a95a943c5"
   key_name  = "Toulon"
   subnet_id = module.woznet.private_subnet_ids[0]
-  #subnet_id = data.terraform_remote_state.woznet.private_subnet_ids[0]
-  #subnet_id = "subnet-0b2008cdd9af45839"
   user_data = data.template_file.user_data.rendered
-  public_ip = true
+  public_ip = false
 
   disk_size = 100
 
   vpc_sec_group = module.woznet_sg.id
-  #vpc_sec_group = "sg-0fa31bd99d9c03644"
 
   tags = merge (
     module.configuration.tags,
@@ -77,24 +73,43 @@ module "woznet_ec2" {
   )
 }
 
-#// 
-#module "woznet_bastion" {
-#  source = "../modules/ec2_instance"
+// 
+module "woznet_bastion" {
+  source = "../modules/ec2_instance"
+
+  ami_id = data.aws_ami.amznix2.id
+  key_name  = "Toulon"
+  subnet_id = module.woznet.public_subnet_ids[0]
+  user_data = data.template_file.user_data.rendered
+  public_ip = true
+
+  vpc_sec_group = module.woznet_sg.id
+
+  tags = merge (
+    module.configuration.tags,
+    {
+      Name = "woznet_ec2_jump"
+    }
+  )
+}
+
+#// Additional network interface
+#resource "aws_network_interface" "test" {
+#  subnet_id       = module.woznet.public_subnet_ids[0] # resource "aws_subnet" "private_subnet1"
+#  private_ips     = ["192.168.3.10"]
+#  security_groups = [module.woznet_sg.id]
 #
-#  ami_id = data.aws_ami.amznix2.id
-#  key_name  = "Toulon"
-#  subnet_id = module.woznet.public_subnet_ids[0]
-#  user_data = data.template_file.user_data.rendered
-#  public_ip = true
-#
-#  vpc_sec_group = module.woznet_sg.id
-#
-#  tags = merge (
-#    module.configuration.tags,
-#    {
-#      Name = "woznet_ec2_jump"
-#    }
-#  )
+#  #attachment {
+#  #  instance     = module.woznet_bastion.instance_id
+#  #  device_index = 1
+#  #}
+#}
+
+## attach the additional network interface
+#resource "aws_network_interface_attachment" "test" {
+#  instance_id          = module.woznet_bastion.id       <- what is it if it's not id?
+#  network_interface_id = aws_network_interface.test.id
+#  device_index         = 1
 #}
 
 #output "tgw_id" {

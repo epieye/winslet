@@ -1,6 +1,6 @@
 provider "aws" {
   region = "us-east-1"
-  profile = "default"
+  profile = "ourzoo-root"
 }
 
 // I don't like drifiting away from how datascan does it.

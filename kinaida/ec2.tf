@@ -50,7 +50,7 @@ module "kinaida_ec2" {
   source = "../modules/ec2_instance"
 
   ami_id = data.aws_ami.amznix2.id
-  key_name  = "Cannes"
+  key_name  = "Toulon"
   subnet_id = module.kinaida.public_subnet_ids[0]
   user_data = data.template_file.user_data.rendered
   public_ip = true
@@ -65,11 +65,11 @@ module "kinaida_ec2" {
   )
 }
 
-## Output the private IP addresses. We might need them. What is the attribute?
-#output "privatec_ip" {
-#  value = module.kinaida_ec2
-#}
-#
-#output "public_ip" {
-#  value = module.kinaida_ec2
-#}
+# Output the private IP addresses. We might need them. What is the attribute?
+output "privatec_ip" {
+  value = module.kinaida_ec2
+}
+
+output "public_ip" {
+  value = module.kinaida_ec2
+}

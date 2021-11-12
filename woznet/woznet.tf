@@ -58,16 +58,16 @@ module "transit_gateway" {
     },
     #{
     #  destination_cidr_block = "192.168.1.0/24"
-    #  transit_gateway_attachment_id = module.ourzoo_tgw_attachment.id
+    #  transit_gateway_attachment_id = data.terraform_remote_state.ourzoo.ourzoo_tgw_attachment.id
     #},
     #{
     #  destination_cidr_block = "192.168.2.0/24"
-    #  transit_gateway_attachment_id = module.kinaida_tgw_attachment.id
+    #  transit_gateway_attachment_id = data.terraform_remote_state.kinaida.kinaida_tgw_attachment.id
     #},
-    {
-      destination_cidr_block = "192.168.3.0/24"
-      transit_gateway_attachment_id = module.woznet_tgw_attachment.id
-    }
+    #{
+    #  destination_cidr_block = "192.168.3.0/24"
+    #  transit_gateway_attachment_id = data.terraform_remote_state.woznet.woznet_tgw_attachment.id
+    #}
   ]
 
   tags = merge(
@@ -78,12 +78,9 @@ module "transit_gateway" {
   )
 }
 
-
-
-
 # Create additional subnets in inpection VPC for VPN portal on PA NGFW.
 resource "aws_subnet" "private_subnet1" {
-  vpc_id = aws_vpc.inspection_vpc.id
+  vpc_id = module.woznet.vpc_id
   count = "1"
   cidr_block = "192.168.3.0/25"
   availability_zone = "us-east-1a"
@@ -99,7 +96,7 @@ resource "aws_subnet" "private_subnet1" {
 }
 
 resource "aws_subnet" "private_subnet2" {
-  vpc_id = aws_vpc.inspection_vpc.id
+  vpc_id = module.woznet.vpc_id
   count = "1"
   cidr_block = "192.168.3.128/25"
   availability_zone = "us-east-1b"
@@ -113,10 +110,6 @@ resource "aws_subnet" "private_subnet2" {
     }
   )
 }
-
-
-
-
 
 output "tgw_id" {
   value = module.transit_gateway.id
