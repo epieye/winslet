@@ -96,7 +96,7 @@ module "woznet_bastion" {
 #// Additional network interface
 #resource "aws_network_interface" "test" {
 #  subnet_id       = module.woznet.public_subnet_ids[0] # resource "aws_subnet" "private_subnet1"
-#  private_ips     = ["192.168.3.10"]
+#  private_ips     = ["192.168.7.10"]
 #  security_groups = [module.woznet_sg.id]
 #
 #  #attachment {
@@ -128,6 +128,10 @@ module "woznet_bastion" {
 #  value = module.woznet_ec2.public_ip
 #}
 
-#output "woznet_settings" {
-#  value = module.woznet
+output "woznet_bastion_public_ip" {
+  value = module.woznet_bastion.module_ec2.public_ip
+}
+
+#output "woznet_ec2" {
+#  value = module.woznet_ec2.
 #}

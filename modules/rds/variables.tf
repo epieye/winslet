@@ -52,3 +52,7 @@ variable "multi_az" {
   default     = false
 }
 
+variable "port" {
+  description = "database port"
+  default     = 5432
+}

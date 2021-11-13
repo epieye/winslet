@@ -60,7 +60,7 @@
 ## Palo-a. If the target type is ip, specify an IP address.
 #resource "aws_lb_target_group_attachment" "target-ip1" {
 #  target_group_arn  = aws_lb_target_group.target-ip.arn
-#  target_id         = "192.168.3.10"
+#  target_id         = "192.168.7.10"
 #  availability_zone = "us-east-1a"
 #  port              = 80
 #}
@@ -68,7 +68,7 @@
 ## Palo-b. Change to a ref.
 #resource "aws_lb_target_group_attachment" "target-ip2" {
 #  target_group_arn  = aws_lb_target_group.target-ip.arn
-#  target_id         = "192.168.3.140"
+#  target_id         = "192.168.7.140"
 #  #availability_zone = "us-east-1b"
 #  availability_zone = "all"
 #  port              = 80

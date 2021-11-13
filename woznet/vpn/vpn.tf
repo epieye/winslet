@@ -124,28 +124,45 @@ resource "aws_ec2_client_vpn_network_association" "associate_vpn_le0_sn1" {
 # Additional routes
 resource "aws_ec2_client_vpn_route" "associate_vpn_le0_sn0_route0" {
   client_vpn_endpoint_id = aws_ec2_client_vpn_endpoint.associate_vpn.id
-  #destination_cidr_block = "192.168.3.0/25"
-  destination_cidr_block = "10.1.0.0/22" 
-  #destination_cidr_block = "10.249.6.0/24" <- OK so 10.245.128.0/22 is not a supernet but my 10.1.0.0/22 is (?)
+  destination_cidr_block = "192.168.8.0/22"
   target_vpc_subnet_id   = aws_subnet.private_subnet1[0].id
 }
 
 
 resource "aws_ec2_client_vpn_route" "associate_vpn_le0_sn1_route0" {
   client_vpn_endpoint_id = aws_ec2_client_vpn_endpoint.associate_vpn.id
-  #destination_cidr_block = "192.168.3.128/25"
-  destination_cidr_block = "10.2.0.0/22"
-  #destination_cidr_block = "10.249.6.0/24"
+  destination_cidr_block = "192.168.8.0/22"
   target_vpc_subnet_id   = aws_subnet.private_subnet2[0].id
 }
 
 
 resource "aws_ec2_client_vpn_authorization_rule" "associate_vpn_auth_aws_network" {
   client_vpn_endpoint_id = aws_ec2_client_vpn_endpoint.associate_vpn.id
-  target_network_cidr    = "10.0.0.0/8"
+  target_network_cidr    = "192.168.8.0/22" 
+
   authorize_all_groups   = true
 }
 
+#192.168.0.0/16 
+#192.168.128.0/17 
+#192.168.192.0/18
+#192.168.224.0/19
+#192.168.240.0/20
+#192.168.248.0/21
+#192.168.252.0/22
+#192.168.254.0/23
+#192.168.255.0/24
+#
+#
+#192.168.0.0/24
+#192.168.1.0/24 AT&T
+#192.168.2.0/24 Comcast
+#192.168.3.0/24 -> 192.168.0.0/22  - home
+#                  192.168.4.0/22  - aws        
+#                  192.168.8.0/22  - vpn
+#                  192.168.12.0/22 - azure
+#                  192.168.16.0/22 - gcs
+#ooh I could also have a site-to-site vpn between the clouds. nice. 
 
 output "associate_vpn_fqdn" {
   value = aws_ec2_client_vpn_endpoint.associate_vpn.dns_name

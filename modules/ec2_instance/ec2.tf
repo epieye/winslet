@@ -32,3 +32,7 @@ resource "aws_instance" "instance" {
     ignore_changes = [ami, user_data]
   }
 }
+
+output "module_ec2" {
+  value = aws_instance.instance
+}
