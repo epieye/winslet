@@ -1,0 +1,24 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "GrantServiceUserTestAccessOptionalIdentifier",
+            "Action": [
+                "s3:ListBucket",
+                "s3:GetObject*",
+                "s3:PutObject*"
+            ],
+            "Effect": "Allow",
+            "Resource": [
+                "arn:aws:s3:::kalahari-logs/*",
+                "arn:aws:s3:::kinaida.net/*",
+                "arn:aws:s3:::ourzoo-backups/*",
+                "arn:aws:s3:::ourzoo-logs/*",
+                "arn:aws:s3:::ourzoo.us/*",
+                "arn:aws:s3:::www.ourzoo.us/*"
+               
+            ]
+        }
+    ]
+}
+
