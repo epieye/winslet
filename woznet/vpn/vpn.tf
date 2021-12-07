@@ -4,32 +4,32 @@ data "aws_acm_certificate" "associate_vpn_server_keypair" {
   statuses = ["ISSUED"]
 }
 
+## Isn't this exactly the same as above?
+#data "aws_acm_certificate" "associate_vpn_client_keypair" {
+#  domain   = "home.ourzoo.us"
+#  statuses = ["ISSUED"]
+#}
 
-data "aws_acm_certificate" "associate_vpn_client_keypair" {
-  domain   = "home.ourzoo.us"
-  statuses = ["ISSUED"]
-}
+## I should have logging, but it's not essential
+#resource "aws_cloudwatch_log_group" "associate_vpn_cw_loggroup" {
+#  name                 = "associate_vpn_loggroup"
+#  retention_in_days    = 14
+#
+#  tags = merge(
+#    module.configuration.tags,
+#    {
+#      Name = "poc-associate-vpn-loggroup"
+#      Environment = "POC"
+#      Application = "associate_vpn"
+#    }
+#  )
+#}
 
 
-resource "aws_cloudwatch_log_group" "associate_vpn_cw_loggroup" {
-  name                 = "associate_vpn_loggroup"
-  retention_in_days    = 14
-
-  tags = merge(
-    module.configuration.tags,
-    {
-      Name = "poc-associate-vpn-loggroup"
-      Environment = "POC"
-      Application = "associate_vpn"
-    }
-  )
-}
-
-
-resource "aws_cloudwatch_log_stream" "associate_vpn_cw_logstream" {
-  name           = "poc-associate-vpn-logstream"
-  log_group_name = aws_cloudwatch_log_group.associate_vpn_cw_loggroup.name
-}
+#resource "aws_cloudwatch_log_stream" "associate_vpn_cw_logstream" {
+#  name           = "poc-associate-vpn-logstream"
+#  log_group_name = aws_cloudwatch_log_group.associate_vpn_cw_loggroup.name
+#}
 
 
 
@@ -71,8 +71,7 @@ resource "aws_iam_saml_provider" "aws-client-vpn-self-service" {
 resource "aws_ec2_client_vpn_endpoint" "associate_vpn" {
   description            = "associate_vpn"
   server_certificate_arn = data.aws_acm_certificate.associate_vpn_server_keypair.arn
-  #client_cidr_block      = "10.245.128.0/22"
-  client_cidr_block      = "10.0.0.0/22"
+  client_cidr_block      = "192.168.8.0/22"
   transport_protocol     = "tcp"
   split_tunnel           = true
   self_service_portal    = "enabled"
@@ -92,9 +91,10 @@ resource "aws_ec2_client_vpn_endpoint" "associate_vpn" {
 
 
   connection_log_options {
-    enabled               = true
-    cloudwatch_log_group  = aws_cloudwatch_log_group.associate_vpn_cw_loggroup.name
-    cloudwatch_log_stream = aws_cloudwatch_log_stream.associate_vpn_cw_logstream.name
+    enabled               = false
+#    enabled               = true
+#    cloudwatch_log_group  = aws_cloudwatch_log_group.associate_vpn_cw_loggroup.name
+#    cloudwatch_log_stream = aws_cloudwatch_log_stream.associate_vpn_cw_logstream.name
   }
 
 #  tags = merge(
@@ -111,35 +111,35 @@ resource "aws_ec2_client_vpn_endpoint" "associate_vpn" {
 # le0 sn0 ?
 resource "aws_ec2_client_vpn_network_association" "associate_vpn_le0_sn0" {
   client_vpn_endpoint_id = aws_ec2_client_vpn_endpoint.associate_vpn.id
-  subnet_id = aws_subnet.private_subnet1[0].id
+  subnet_id = data.terraform_remote_state.woznet.outputs.woznet_settings.public_subnet_ids[0]
 }
 
 # le0 sn1 - why two ? Is this just redundancy?
 resource "aws_ec2_client_vpn_network_association" "associate_vpn_le0_sn1" {
   client_vpn_endpoint_id = aws_ec2_client_vpn_endpoint.associate_vpn.id
-  subnet_id  = aws_subnet.private_subnet2[0].id
+  subnet_id = data.terraform_remote_state.woznet.outputs.woznet_settings.public_subnet_ids[1]
+  
 }
 
 
 # Additional routes
 resource "aws_ec2_client_vpn_route" "associate_vpn_le0_sn0_route0" {
   client_vpn_endpoint_id = aws_ec2_client_vpn_endpoint.associate_vpn.id
-  destination_cidr_block = "192.168.8.0/22"
-  target_vpc_subnet_id   = aws_subnet.private_subnet1[0].id
+  destination_cidr_block = "192.168.4.0/22"
+  target_vpc_subnet_id   = data.terraform_remote_state.woznet.outputs.woznet_settings.public_subnet_ids[0]
 }
 
 
 resource "aws_ec2_client_vpn_route" "associate_vpn_le0_sn1_route0" {
   client_vpn_endpoint_id = aws_ec2_client_vpn_endpoint.associate_vpn.id
-  destination_cidr_block = "192.168.8.0/22"
-  target_vpc_subnet_id   = aws_subnet.private_subnet2[0].id
+  destination_cidr_block = "192.168.4.0/22"
+  target_vpc_subnet_id   = data.terraform_remote_state.woznet.outputs.woznet_settings.public_subnet_ids[1]
 }
 
 
 resource "aws_ec2_client_vpn_authorization_rule" "associate_vpn_auth_aws_network" {
   client_vpn_endpoint_id = aws_ec2_client_vpn_endpoint.associate_vpn.id
-  target_network_cidr    = "192.168.8.0/22" 
-
+  target_network_cidr    = "192.168.4.0/22" 
   authorize_all_groups   = true
 }
 
@@ -164,6 +164,11 @@ resource "aws_ec2_client_vpn_authorization_rule" "associate_vpn_auth_aws_network
 #                  192.168.16.0/22 - gcs
 #ooh I could also have a site-to-site vpn between the clouds. nice. 
 
-output "associate_vpn_fqdn" {
-  value = aws_ec2_client_vpn_endpoint.associate_vpn.dns_name
+# aws ec2 describe-client-vpn-endpoints
+output "Self-service-portal" {
+  value = aws_ec2_client_vpn_endpoint.associate_vpn
 }
+
+#output "debug" {
+#  value = data.terraform_remote_state.woznet.outputs.woznet_settings.public_subnet_ids
+#}

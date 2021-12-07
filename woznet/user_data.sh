@@ -52,13 +52,18 @@ echo "warren    ALL=(ALL)       NOPASSWD: ALL" > /etc/sudoers.d/local_admin
 useradd -m -G wheel,docker -u 1100 -c "Warren Matthews" -d /home/warren -s /bin/bash warren
 su - warren -c 'ssh-keygen -b 2048 -f ~/.ssh/id_rsa -q -N ""' 
 
-echo "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC0n4EDl6ksSuiQTw9Jt6rLbCo0b+rDCuAFDCN2Y5vxihDR8kKx7JHkIZLH7njAy4kDSaqjRbBE86Gfq36JCfZFYjxzBNDAeIDoM9irBuaq7iOOJs94H/d+48HIPrxa8oeHYsrwAyTZqJZsc4euI6/IMnB+wLYuC++zo0INxWLQhhtiB70rc+Uf/fG8JX/vF6GXbd18x46kBea6PvN3OpfyMnX5onYotXL09IABCUZqZyb0q+GFyHXBBSi6V1VDboGOXerpdbqWcAwXm5NxOkPx7mohNIGrR+JdBKcMj+mGSf9qZsbi+djJbFB0OOVkL8SrXNKDHuXUWHn9L3GmSOLB warren@mojave" >> /home/warren/.ssh/authorized_keys
+echo "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCaau8bgIotVwiJR9W5YNxJf1iUXpu4y1v2RDpw/xHQ9BgdvMGv+7Pw7cpf8Xh+yn/wKY7VSnp3UxT7zbTIs4/uZdY4Dydh9ArADAVvtqE1KMdcnvU9DPjLJ035TbHFH1zBnsKYwDgidAxqIcL02TUINohSawg+8gZnDp9aJnypFO8bpGBeZitN/ZjbhuX2i/5UKouuPw/FJpClaRW+dPzykY8QGgQpsb4nHJWEG6AoBu5+ppOapeBG4VApz9OtqQqkIaN7VpS1VA28wp9I6bR6206oCJv2JSBKz6G/qzL5fqB4My4QAecOSnexk7NyAq5Jmi3kW6vFmkMeqxDRXqnIMqppfh8WhTzSJ0CRoECcOZAkpnjMWaAfsMWYiZwEg9fZdNHUTGzXzS+8Pm4nQYZOIs0XkEakYCmfGjnnPzqG95A74No6x9EpofbzMXv1IecwzHCOGvEEWI31LownpivOB/wB5AzK2eSVXp/Uq3mdGdMXv5gy61vQ5YyWbw+Lkjk= wofsvcf@eusadminss-MacBook-Pro.local" >> /home/warren/.ssh/authorized_keys
 echo "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCthVPykSkIFUDCnYYlhGrlr5xKYHu56O7NurlmalpMgujVvjAN640IxwanEouqCsgghIq/rDf2lRx1YWisoEqZlMX/0IX/29S+pdefRlpSy5rzN37gnbW6oS3pJNadm2Pn4+/asvbqYKxCeODor7g5ntG3lb6TGfhHiW8ssOP9iUqSPRUQ8I5kfoimPbLIMfbQlokZdiL3VVQJ8n+Ck1BPfFuvYp1yaPzJFah2ltMsTE4Pw1C1YXOi9HG1cq4Tj9aSiaegAWy4ZqiP2AgoaOOljuCOyFwknmWeLLA56Q6GTiEdjcR2Z6fxOvvD8Rcz+3+0EtPztVUIA6SzeCSb1KY9 warren@gina" >> /home/warren/.ssh/authorized_keys
 echo "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDMC9TGjfbIdyW5+Av+kL3RMRqlqFcAvSykyVnJ4jyi5E2PJ4vApRPOhDCsPi2iA0IqxCS3xO93TYfv7wI9NcMrG2/b+25qgXiWoqi3VyNNGn4FY5QGRx96V98CWJ3h5bWboRQ6PkE1/uaQgykAByGGPSzreKFu+13L8RFEJkCWMCFRNpNCsfckVcrP2Wf5Ikx4v1CcXZwJwnaKAMLIoGU+krIa7fKuv9KWiqq1HZrtohIxR08SI/Lw2ccYVnkTo3fq8YyCStBxymqWhYp5IopfPdokrz4dgwGbHDrc85HGU5lP+lxnUo+qADrYkct3xFNvolGY/2xfEbANG5s4wh3p warren@rosa.ourzoo.us" >> /home/warren/.ssh/authorized_keys
 chown warren:warren /home/warren/.ssh
 chmod 755 /home/warren/.ssh
 chown warren:warren /home/warren/.ssh/authorized_keys
 chmod 400 /home/warren/.ssh/authorized_keys
+
+# need a key or a password on the private-only servers.
+# copy pem file manually until I can think of something better. Don't want to use passwords if I don't have to.
+# could upload the public key to s3 once I create it. Need to create aws creds first.
+#su - warren -c "aws s3 cp /home/warren/.ssh/id_rsa.pub s3://kinaida.net/                                            "
 
 # Make this a secret.
 mkdir /home/warren/.aws

@@ -36,8 +36,14 @@ module "woznet_sg" {
       cidr_blocks = ["0.0.0.0/0"]
     },
     {
-      from_port  = 0
+      from_port  = 443
       to_port = 443
+      protocol = "tcp"
+      cidr_blocks = ["0.0.0.0/0"]
+    },
+    {
+      from_port  = 5432
+      to_port = 5432
       protocol = "tcp"
       cidr_blocks = ["0.0.0.0/0"]
     }
@@ -131,6 +137,11 @@ module "woznet_bastion" {
 output "woznet_bastion_public_ip" {
   value = module.woznet_bastion.module_ec2.public_ip
 }
+
+output "woznet_private_ip" {
+  value = module.woznet_ec2.module_ec2.private_ip
+}
+
 
 #output "woznet_ec2" {
 #  value = module.woznet_ec2.
