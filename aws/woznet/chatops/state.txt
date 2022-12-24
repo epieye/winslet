@@ -1,0 +1,31 @@
+# seems ugly to have so many sqs queues but eacxh queue fires a separate lambda
+# refactor: maybe two lambda; one internal and one external. single lambda which code calls depends on content of sqsmessage
+#       or: back-and-forth adding details to queue, then final lambda writes to db. What happens if something breaks? 
+
+
+api_gateway (Eudoxus) writes to r_queue
+r_queue triggers database_trigger (think of a better name) - database lambda adds entry to table; state = "open"; deletes entry in r_queue; writes to s_queue
+s_queue triggers jira_trigger - creates ticket; status = in-progress; deletes entry in s_queue; writes to u_queue
+#u_queue trigggers antother database call - write bsp ticket number to database
+v_queue triggers slack_trigger - creates channel and adds users, send welcome message; deletes entry in u_queue; writes to v_queue
+#needs to write username to database. Unless slack gives me the real name not just slack id. check if username is always first_name_initial last_name _ linux1
+w_queue transition jira ticket; status=create-password
+x_queue triggers otp_trigger - creates otp, captures otp and url; deletes entry in v_queue; writes to w_queue
+y_queue send progress message to slack
+z_queue 
+
+
+
+slack/send_message.py link
+status=complete
+jira/close_issue.py
+status=closed
+slack/send_message.py closed+archive_in_5_days
+
+slack/archive_room.py
+status=archived
+
+--
+
+
+# make sure message is "change my password" or something I want.
