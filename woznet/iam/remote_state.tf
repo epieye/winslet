@@ -21,6 +21,17 @@ data "terraform_remote_state" "woznet" {
 #  }
 #}
 
+data "terraform_remote_state" "woznet-iam-iam" {
+  backend = "s3"
+  config = {
+    bucket = "ourzoo.us"
+    region = "us-east-1"
+    key = "woznet-iam-iam.tfstate"
+    profile = "ourzoo-root"
+    acl = "bucket-owner-full-control"
+  }
+}
+
 #//bucket must be previously created.
 #terraform {
 #  backend "s3" {

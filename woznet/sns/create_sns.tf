@@ -1,6 +1,3 @@
-
-
-
 // https://docs.aws.amazon.com/sns/latest/dg/sns-getting-started.html
 #Create a topic
 #Create a subscription to the topic
