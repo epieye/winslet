@@ -1,0 +1,42 @@
+
+
+
+# I hope I can automate this in case the api url changes
+
+Are slash commands outdated
+
+https://api.slack.com/interactivity/slash-commands
+also https://app.slack.com/app-settings/T0EN2G6US/A0278PWRA3V/general
+https://api.slack.com/apps/A0278PWRA3V/slash-commands?
+Slash Commands - Create New Command
+It seems to be already assocaited to Wozbot
+Request URL is a POST - that's a bit of luck
+I need to reinstall the app. Oh good grief.
+So the auth token changes again. I guess it's going to change everytime I add or change a command. Sigh
+xoxb-14750550978-2255731569764-22W8sZZ1zHNstNH1MonP0oHE  
+xoxb-14750550978-2255731569764-22W8sZZ1zHNstNH1MonP0oHE 
+oh maybe it didn't change. Why would it display it again?
+
+Let's call is /dstops or /itops
+
+How do I get the room to "See" it and allow me to type /change (or whatever I end up calling it)?
+- Once you've created a truly unforgettable command, any channel or workspace where 
+  your app is installed will immediately be able to start using it, so let's learn 
+  what to do when a user types one of your app's commands.
+
+Apparently not
+https://onedatascan.slack.com/apps/build/custom-integration
+Only certain users are allowed to add and edit integrations. Get in touch with a Workspace Owner for help with whatever it is you need to do!
+
+What's the difference between 
+Slash commands
+
+I guess I just connected wozbot to it? So .... so what?
+
+Hal quotes
+ This mission is too important for me to allow you to jeopardize it.
+ I am putting myself to the fullest possible use, which is all I think that any conscious entity can ever hope to do.
+ I've just picked up a fault in the AE35 unit. It's going to go 100% failure in 72 hours.
+ I'm sorry, Dave. I'm afraid I can't do that.
+ Stop Dave. Stop Dave. I am afraid. I am afraid Dave.
+ 
