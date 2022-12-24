@@ -1,0 +1,13 @@
+---
+- name: Create service group objects
+  panos_service_group:
+    provider: '{{ provider }}'
+    name: '{{ item.name }}'
+    value: '{{ item.values }}'
+  register: create_panos_service_group
+  until: create_panos_service_group is not failed
+  retries: 3
+  with_items:
+    - { name: 'Prod-Services',             values: ['service-ssh', 'service-mysql'] }
+    - { name: 'Monitoring-Services',       values: ['service-syslog', 'service-influxdb', 'service-fluentd'] }
+

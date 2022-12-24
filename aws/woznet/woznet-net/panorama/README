@@ -1,0 +1,37 @@
+# to-do: 
+
+ssh to the ec2 that I just create in woznet
+
+install pem key; chmod 600 .ssh/Toulon.pem 
+sudo yum install ansible
+pip3 install pan-os-python pan-python pandevice xmltodict
+ansible-galaxy collection install paloaltonetworks.panos # not sudo.
+
+main and other playbooks
+tar cvf palo_alto_playbooks.tar --exclude "./palo_alto_playbooks/.git" palo_alto_playbooks/
+
+ssh to the panorama instance that we just created in woznet too
+ssh -i .ssh/Toulon.pem admin@192.168.4.156 <- the ip of the panorama instance 
+
+set admin password: configure; set mgt-config users admin password; commit
+
+
+
+Further setup:
+
+we added something that turned on the Templates and Device Groups Polices and Objects.
+Create a device group?
+panorama -> device-groups -> add "Test" (only name, I didn't do anything else)
+-> Device groups policies and objects have no appeared. With my objects. Woof.
+But not templates network and devices. 
+
+I can't see that we can create a device-group by ansible
+Or the templates
+Also the bad ip addresses. I vaguely remember enabling that in the downloads, or something.
+
+
+Tear down panorama instance
+delete security group
+delete ebs volumes
+unsubscribe from the marketplace
+Tear down woznet

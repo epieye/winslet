@@ -1,0 +1,89 @@
+---
+- name: Maintain Panorama Objects
+  hosts: all
+  gather_facts: no
+  connection: local
+  collections:
+    - paloaltonetworks.panos
+    - amazon.aws.aws_secret
+
+  vars: 
+    provider:
+      ip_address: 10.245.16.32
+      username: admin
+      #password: "{{ lookup('amazon.aws.aws_secret', 'panorama-admin-pw.panorama-admin-pw', aws_profile='production-shared-infrastructure', region='us-east-1', nested=true  ) }}"
+      password: "{{ lookup('amazon.aws.aws_secret', 'panorama-admin-pw.panorama-admin-pw', region='us-east-1', nested=true  ) }}"
+
+  tasks:
+  #- name: Create tag objects
+  #  import_tasks: create_tags.yaml
+
+  - name: Create address objects
+    import_tasks: create_address_objects.yaml
+
+  - name: Create address group objects. A group of addresses.
+    import_tasks: create_address_group_objects.yaml
+
+  #- name: Remove address group objects. 
+  #  import_tasks: remove_address_group_objects.yaml
+
+  #- name: Remove address objects
+  #  import_tasks: remove_address_objects.yaml
+
+  - name: Create Service Objects
+    import_tasks: create_service_object.yaml
+
+  #- name: Remove Service Objects
+  #  import_tasks: remove_service_object.yaml
+
+  - name: Create Service Groups
+    import_tasks: create_service_group.yaml
+
+  #- name: Remove Service Groups
+  #  import_tasks: remove_service_group.yaml
+
+  #- name: Create Application. I don't think we need to create application objects.
+  #  import_tasks: create_application_object.yaml
+
+  #- name: Create Application Group. Application Filter instead.
+  #  import_tasks: create_application_group.yaml
+
+  - name: Create Application Filter
+    import_tasks: create_application_filter.yaml 
+
+  #- name: Remove Application
+  #  import_tasks: remove_application_object.yaml
+
+  #- name: Remove Application Group
+  #  import_tasks: remove_application_group.yaml
+
+  - name: Remove Application Filter
+    import_tasks: remove_application_filter.yaml
+
+  #- name: Create Region
+  #  import_tasks: create_region.yaml
+
+  - name: Add Pre Rule
+    import_tasks: add_pre-rule.yaml
+
+  #- name: Remove Pre Rule
+  #  import_tasks: remove_pre-rule.yaml
+
+  # Examples of commit from doc. Chose the one(s) right for us.
+  #- name: commit candidate config on firewall
+  #  panos_commit:
+  #    provider: '{{ provider }}'
+
+  - name: commit candidate config on Panorama. Does this just save the running config or push it out to the ngfw too?
+    panos_commit:
+      provider: '{{ provider }}'
+      device_group: 'dg-aws'
+
+  #- name: commit changes by specified admins to firewall
+  #  panos_commit:
+  #    provider: '{{ provider }}'
+  #    admins: ['admin1','admin2']
+
+
+
+

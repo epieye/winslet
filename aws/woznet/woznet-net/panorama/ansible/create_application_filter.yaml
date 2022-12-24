@@ -1,0 +1,26 @@
+--- 
+- name: Create application filter by risk
+  panos_application_filter:
+    provider: '{{ provider }}'
+    name: '{{ item.name }}'
+    risk: '{{ item.risk }}'
+  register: create_application_filter_by_risk
+  until: create_application_filter_by_risk is not failed
+  retries: 3
+  with_items:
+    - { name: 'high_risk_applications_4', risk: '4' }
+    - { name: 'high_risk_applications_5', risk: '5' }
+
+- name: Create application filter by subcategory
+  panos_application_filter:
+    provider: '{{ provider }}'
+    name: '{{ item.name }}'
+    subcategory: '{{ item.subcategory }}'
+  register: create_application_filter_by_subcategory
+  until: create_application_filter_by_subcategory is not failed
+  retries: 3
+  with_items:
+    - { name: 'social_networking', subcategory: 'social-networking' }
+    - { name: 'file_sharing',      subcategory: 'file-sharing' }
+    - { name: 'audio_streaming',   subcategory: 'audio-streaming' }
+    - { name: 'gaming',            subcategory: 'gaming' }

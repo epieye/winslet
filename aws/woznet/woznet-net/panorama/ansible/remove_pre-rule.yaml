@@ -1,0 +1,33 @@
+- name: Delete pre-rule
+  panos_security_rule:
+    provider: '{{ provider }}'
+    state: 'absent'
+    rule_name: '{{ item.name }}'
+  register: del_pre_rule
+  until: del_pre_rule is not failed
+  retries: 3
+  with_items:
+    - { name: 'Geoblock'}
+    - { name: 'Allow UAT_WI-PSI'}
+    - { name: 'Allow UAT_WI-NSI'}
+    - { name: 'Deny QA-UAT'}
+    - { name: 'Deny QA-PROD'}
+    - { name: 'Allow Mercedes'}
+    - { name: 'Allow GMF Dealer'}
+    - { name: 'Allow India_Ai_Access'}
+    - { name: 'Allow BMW_MX'}
+    - { name: 'Allow Element_PNC'}
+    - { name: 'Allow ECF_SouthKorea'}
+    - { name: 'Allow CMW_Australia'}
+    - { name: 'Allow JPM Chase'}
+    - { name: 'Allow BOH_Guam'}
+    - { name: 'Allow First_Hawaiian_Bank_Guam'}
+    - { name: 'Allow TCFIF'}
+    - { name: 'Allow MTB'}
+    - { name: 'Allow Suntrust_BB_T'}
+    - { name: 'Allow BMO'}
+    - { name: 'Allow Mazda_Manheim'}
+    - { name: 'Allow PNC_SouthKoreaFTP'}
+    - { name: 'Allow Hyundai'}
+    - { name: 'Allow VWC'}
+

@@ -1,0 +1,20 @@
+---
+- name: Remove address group objects. 
+  panos_address_group:
+    provider: '{{ provider }}'
+    name: '{{ item.name }}'
+    state: absent
+  register: remove_address_group_objects
+  until: remove_address_group_objects is not failed
+  retries: 3
+  with_items:
+    - { name: 'Allow Mercedes Deutschland'}
+    - { name: 'GMF Dealer'}
+    - { name: 'India Ai Access'}
+    - { name: 'Allow_TCFIF'}
+    - { name: 'Allow_Suntrust-BB_T'}
+    - { name: 'Allow_BMO'}
+    - { name: 'Allow_PNC_SouthKoreaFTP'}
+    - { name: 'Allow Hyundai'}
+    - { name: 'Allow_VWC'}
+    - { name: 'Mazda_mannheim'}

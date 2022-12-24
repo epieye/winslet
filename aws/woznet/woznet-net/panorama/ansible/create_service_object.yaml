@@ -1,0 +1,15 @@
+---
+- name: Create service object '{{ item.name }}'
+  panos_service_object:
+    provider: '{{ provider }}'
+    name: '{{ item.name }}'
+    destination_port: '{{ item.port }}'
+    description: '{{ item.description }}'
+    tag: '{{ item.tags }}'
+  register: create_panos_service_object
+  until: create_panos_service_object is not failed
+  retries: 3
+  with_items:
+    - { name: 'service-ssh',   port: '22',   description: 'SSH access on TCP/22',       tags: ['Internal', 'Testing'] }
+    - { name: 'service-mysql', port: '3306', description: 'MySQL database on TCP/3306', tags: ['Internal', 'Testing'] }
+

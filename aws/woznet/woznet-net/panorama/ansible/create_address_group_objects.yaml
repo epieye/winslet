@@ -1,0 +1,38 @@
+---
+- name: Create address group objects. A group of addresses.
+  panos_address_group:
+    provider: '{{ provider }}'
+    name: '{{ item.name }}'
+    device_group: 'shared'
+    static_value: '{{ item.objects }}'
+    description: '{{ item.name }}'
+    tag: ['External']
+  register: create_address_group_objects
+  until: create_address_group_objects is not failed
+  retries: 3
+  with_items:
+    - { name: 'DEV',                        objects: ["DEVQA-SHARED-INFRA", "DEV-QA", "OLD-DEVQA-66", "OLD-DEVQA-39", "OLD-DEVQA-45", "OLD-DEVQA-250"] }
+    - { name: "OLD-DEVQA",                  objects: ["OLD-DEVQA-66", "OLD-DEVQA-39", "OLD-DEVQA-45", "OLD-DEVQA-250"] }
+    - { name: 'LAB',                        objects: ["LAB-ENGINEERING", "LAB-PERFORMANCE", "LAB-QUALIFICATION", "LAB-QUALIFICATION-EKS", "LAB-YONAH"] }
+    - { name: 'UAT',                        objects: ["UAT-WI", "UAT-AI", "UAT-DATACISION"] }
+    - { name: 'PROD',                       objects: ["PROD-SHARED-INFRA", "PROD-WI", "PROD-AI", "PROD-DATACISION", "PROD-DATA-LAKE"] }
+    - { name: 'Mercedes',                   objects: ["Mercedes Deutschland - 141.113.171.11", "Mercedes Deutschland - 141.113.171.12", "Mercedes Deutschland - 141.113.150.51", "Mercedes Deutschland - 141.113.150.52"] }
+    - { name: 'GMF',                        objects: ["GMF Dealer - 159.100.160.51", "GMF Dealer - 75.114.68.114", "GMF Dealer - 174.135.128.18"] }
+    - { name: 'India_Ai',                   objects: ["India_Ai_Access-1", "India_Ai_Access-2"] }
+    - { name: 'BMW_MX',                     objects: ["BMW_MX - 160.46.240.140", "BMW_MX - 160.46.249.29", "BMW_MX - 160.46.249.30", "BMW_MX - 160.46.241.17", "BMW_MX - 160.46.241.19"] }
+    - { name: 'Element_PNC',                objects: ["Element_PNC - 195.85.193.46"] }
+    - { name: 'ECF_SouthKorea',             objects: ["ECF_SouthKorea - 203.226.143.75", "ECF_SouthKorea - 203.226.143.78", "ECF_SouthKorea - 203.226.143.96"] }
+    - { name: 'CMW_Australia',              objects: ["CMW_Australia - 172.18.0.116", "CMW_Australia - 80.24.129.166", "CMW_Australia - 203.44.139.46", "CMW_Australia - 217.165.97.196", "CMW_Australia - 212.96.183.82", "CMW_Australia - 80.95.121.50", "CMW_Australia - 83.167.134.70", "CMW_Australia - 88.149.144.154", "CMW_Australia - 110.175.214.174", "CMW_Australia - 185.219.166.238", "CMW_Australia - 185.157.25.2", "CMW_Australia - 80.26.130.212", "CMW_Australia - 80.32.125.165", "CMW_Australia - 185.104.255.15", "CMW_Australia - 88.26.205.65", "CMW_Australia - 80.14.54.189", "CMW_Australia - 1.129.110.22", "CMW_Australia - 92.187.224.2"] }
+    - { name: 'JPM_Chase',                  objects: ["JPM Chase - 159.53.0.0_16", "JPM Chase - 169.64.0.0_10", "JPM Chase - 146.143.0.0_16", "JPM Chase - 199.253.241.0_24", "JPM Chase - 199.253.242.0_23", "JPM Chase - 199.253.244.0_22", "JPM Chase - 199.253.248.0_24", "JPM Chase - 170.148.69.128_25", "JPM Chase - 170.148.132.128_25", "JPM Chase - 103.246.196.0_27", "JPM Chase - 103.246.197.0_27"] }
+    - { name: 'BOH_Guam',                   objects: ["BOH_Guam - 202.128.73.14", "BOH_Guam - 202.151.82.42", "BOH_Guam - 121.55.235.241", "BOH_Guam - 8.3.117.229", "BOH_Guam - 117.103.89.161", "BOH_Guam - 202.88.91.218"] }
+    - { name: 'First_Hawaiian_Bank_Guam',   objects: ["First_Hawaiian_Bank_Guam - 202.128.72.186", "First_Hawaiian_Bank_Guam - 114.142.192.14", "First_Hawaiian_Bank_Guam - 202.128.73.226", "First_Hawaiian_Bank_Guam - 202.151.79.186", "First_Hawaiian_Bank_Guam - 202.151.79.187", "First_Hawaiian_Bank_Guam - 114.142.197.6", "First_Hawaiian_Bank_Guam - 202.47.159.23", "First_Hawaiian_Bank_Guam - 40.77.167.196"] }
+    - { name: 'TCFIF',                      objects: ["TCFIF - 213.148.193.22", "TCFIF - 88.87.215.46", "TCFIF - 217.111.25.45", "TCFIF - 130.105.154.47", "TCFIF - 110.54.237.54", "TCFIF - 23.132.80.118"] }
+    - { name: 'MTB',                        objects: ["MTB - 74.118.24.210"] }
+    - { name: 'Suntrust_BB_T',        objects: ["Allow_Suntrust-BB_T - 74.120.64.240_28", "Allow_Suntrust-BB_T - 74.120.68.240_28"] }
+    - { name: 'BMO',                  objects: ["Allow_BMO - 23.142.33.56", "Allow_BMO - 23.142.33.29", "Allow_BMO - 64.66.247.4", "Allow_BMO - 64.66.247.1"] }
+    - { name: 'Mazda_Manheim',              objects: ["Mazda_Manheim - 66.6.147.80", "Mazda_Manheim - 66.6.147.81", "Mazda_Manheim - 67.97.216.33", "Mazda_Manheim - 67.97.216.34", "Mazda_Manheim - 67.97.218.33", "Mazda_Manheim - 67.97.218.34", "Mazda_Manheim - 67.97.220.33", "Mazda_Manheim - 67.97.220.34"] }
+    - { name: 'PNC_SouthKoreaFTP',    objects: ["Allow_PNC_SouthKoreaFTP - 54.180.178.214"] }
+    - { name: 'Hyundai',              objects: ["Allow Hyundai - 209.198.177.10", "Allow Hyundai - 209.198.177.11", "Allow Hyundai - 209.203.79.191", "Allow Hyundai - 209.203.79.10", "Allow Hyundai - 209.203.79.11", "Allow Hyundai - 209.203.79.12", "Allow Hyundai - 209.198.178.245", "Allow Hyundai - 209.198.178.246", "Allow Hyundai - 209.198.178.247", "Allow Hyundai - 209.198.178.248", "Allow Hyundai - 209.198.178.249", "Allow Hyundai - 209.198.178.250", "Allow Hyundai - 209.198.178.251", "Allow Hyundai - 209.198.178.252", "Allow Hyundai - 209.198.178.253", "Allow Hyundai - 209.198.178.254"] }
+    - { name: 'VWC',                  objects: ["Allow_VWC - 204.248.39.10", "Allow_VWC - 63.174.218.16"] }
+    - { name: 'Imperva_WAF',                objects: ["Imperva DNS - 45.60.152.57"] }
+    - { name: 'MONITORING',                  objects: ["MONITORING_VPC"] }

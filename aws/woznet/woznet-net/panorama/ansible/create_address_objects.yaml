@@ -1,0 +1,164 @@
+- name: Create address objects
+  panos_address_object:
+    provider: '{{ provider }}'
+    name: '{{ item.name }}'
+    device_group: 'shared'
+    value: '{{ item.net }}'
+    description: '{{ item.name }}'
+    tag: ['External']
+  register: create_address_objects
+  until: create_address_objects is not failed
+  retries: 3
+  with_items:
+    - { name: 'NETWORK-SHARED-INFRASTRUCTURE',             net: '10.245.0.0/20'      }
+    - { name: 'SECURITY-TOOLING',                          net: '10.245.16.0/20'     }
+    - { name: 'DEVQA-SHARED-INFRA',                        net: '10.245.32.0/20'     }
+    - { name: 'DEV-QA',                                    net: '10.245.48.0/20'     }
+    - { name: 'OLD-DEVQA-66',                              net: '10.66.0.0/16'       }
+    - { name: 'OLD-DEVQA-39',                              net: '10.39.0.0/21'       }
+    - { name: 'OLD-DEVQA-45',                              net: '10.45.0.0/24'       }
+    - { name: 'OLD-DEVQA-40',                              net: '10.40.0.0/21'       }
+    - { name: 'OLD-DEVQA-250',                             net: '10.250.0.0/15'      }
+    - { name: 'LAB-ENGINEERING',                           net: '10.247.0.0/20'      }
+    - { name: 'LAB-PERFORMANCE',                           net: '10.247.16.0/20'     }
+    - { name: 'LAB-QUALIFICATION',                         net: '10.247.32.0/20'     }
+    - { name: 'LAB-QUALIFICATION-EKS',                     net: '10.247.112.0/20'    }
+    - { name: 'LAB-YONAH',                                 net: '10.247.48.0/20'     }
+    - { name: 'UAT-WI',                                    net: '10.247.64.0/20'     }
+    - { name: 'UAT-AI',                                    net: '10.247.80.0/20'     }
+    - { name: 'UAT-DATACISION',                            net: '10.247.96.0/20'     }
+    - { name: 'PROD-SHARED-INFRA',                         net: '10.249.0.0/20'      }
+    - { name: 'WORKSPACES',                                net: '10.249.6.0/23'      }
+    - { name: 'PROD-WI',                                   net: '10.249.16.0/20'     }
+    - { name: 'PROD-AI',                                   net: '10.249.32.0/20'     }
+    - { name: 'PROD-DATACISION',                           net: '10.249.48.0/20'     }
+    - { name: 'PROD-DATA-LAKE',                            net: '10.249.64.0/20'     }
+    - { name: 'UAT-FTPS',                                  net: '149.97.133.22'      }
+    - { name: 'Mercedes Deutschland - 141.113.171.11',     net: '141.113.171.11'     }
+    - { name: 'Mercedes Deutschland - 141.113.171.12',     net: '141.113.171.12'     }
+    - { name: 'Mercedes Deutschland - 141.113.150.51',     net: '141.113.150.51'     }
+    - { name: 'Mercedes Deutschland - 141.113.150.52',     net: '141.113.150.52'     }
+    - { name: 'GMF Dealer - 159.100.160.51',               net: '159.100.160.51'     }
+    - { name: 'GMF Dealer - 75.114.68.114',                net: '75.114.68.114'      }
+    - { name: 'GMF Dealer - 174.135.128.18',               net: '174.135.128.18'     }
+    - { name: 'India_Ai_Access-1',                         net: '58.2.236.196'       }
+    - { name: 'India_Ai_Access-2',                         net: '58.2.238.190'       }
+    - { name: 'BMW_MX - 160.46.240.140',                   net: '160.46.240.140'     }
+    - { name: 'BMW_MX - 160.46.249.29',                    net: '160.46.249.29'      }
+    - { name: 'BMW_MX - 160.46.249.30',                    net: '160.46.249.30'      }
+    - { name: 'BMW_MX - 160.46.241.17',                    net: '160.46.241.17'      }
+    - { name: 'BMW_MX - 160.46.241.19',                    net: '160.46.241.19'      }
+    - { name: 'Element_PNC - 195.85.193.46',               net: '195.85.193.46'      }
+    - { name: 'ECF_SouthKorea - 203.226.143.75',           net: '203.226.143.75'     }
+    - { name: 'ECF_SouthKorea - 203.226.143.78',           net: '203.226.143.78'     }
+    - { name: 'ECF_SouthKorea - 203.226.143.96',           net: '203.226.143.96'     }
+    - { name: 'CMW_Australia - 172.18.0.116',              net: '172.18.0.116'       }
+    - { name: 'CMW_Australia - 80.24.129.166',             net: '80.24.129.166'      }
+    - { name: 'CMW_Australia - 203.44.139.46',             net: '203.44.139.46'      }
+    - { name: 'CMW_Australia - 217.165.97.196',            net: '217.165.97.196'     }
+    - { name: 'CMW_Australia - 212.96.183.82',             net: '212.96.183.82'      }
+    - { name: 'CMW_Australia - 80.95.121.50',              net: '80.95.121.50'       }
+    - { name: 'CMW_Australia - 83.167.134.70',             net: '83.167.134.70'      }
+    - { name: 'CMW_Australia - 88.149.144.154',            net: '88.149.144.154'     }
+    - { name: 'CMW_Australia - 110.175.214.174',           net: '110.175.214.174'    }
+    - { name: 'CMW_Australia - 185.219.166.238',           net: '185.219.166.238'    }
+    - { name: 'CMW_Australia - 185.157.25.2',              net: '185.157.25.2'       }
+    - { name: 'CMW_Australia - 80.26.130.212',             net: '80.26.130.212'      }
+    - { name: 'CMW_Australia - 80.32.125.165',             net: '80.32.125.165'      }
+    - { name: 'CMW_Australia - 185.104.255.15',            net: '185.104.255.15'     }
+    - { name: 'CMW_Australia - 88.26.205.65',              net: '88.26.205.65'       }
+    - { name: 'CMW_Australia - 80.14.54.189',              net: '80.14.54.189'       }
+    - { name: 'CMW_Australia - 1.129.110.22',              net: '1.129.110.22'       }
+    - { name: 'CMW_Australia - 92.187.224.2',              net: '92.187.224.2'       }
+    - { name: 'JPM Chase - 159.53.0.0_16',                 net: '159.53.0.0/16'      }
+    - { name: 'JPM Chase - 169.64.0.0_10',                 net: '169.64.0.0/10'      }
+    - { name: 'JPM Chase - 146.143.0.0_16',                net: '146.143.0.0/16'     }
+    - { name: 'JPM Chase - 199.253.241.0_24',              net: '199.253.241.0/24'   }
+    - { name: 'JPM Chase - 199.253.242.0_23',              net: '199.253.242.0/23'   }
+    - { name: 'JPM Chase - 199.253.244.0_22',              net: '199.253.244.0/22'   }
+    - { name: 'JPM Chase - 199.253.248.0_24',              net: '199.253.248.0/24'   }
+    - { name: 'JPM Chase - 170.148.69.128_25',             net: '170.148.69.128/25'  }
+    - { name: 'JPM Chase - 170.148.132.128_25',            net: '170.148.132.128/25' }
+    - { name: 'JPM Chase - 103.246.196.0_27',              net: '103.246.196.0/27'   }
+    - { name: 'JPM Chase - 103.246.197.0_27',              net: '103.246.197.0/27'   } 
+    - { name: 'BOH_Guam - 202.128.73.14',                  net: '202.128.73.14'      }
+    - { name: 'BOH_Guam - 202.151.82.42',                  net: '202.151.82.42'      }
+    - { name: 'BOH_Guam - 121.55.235.241',                 net: '121.55.235.241'     }
+    - { name: 'BOH_Guam - 8.3.117.229',                    net: '8.3.117.229'        }
+    - { name: 'BOH_Guam - 117.103.89.161',                 net: '117.103.89.161'     }
+    - { name: 'BOH_Guam - 202.88.91.218',                  net: '202.88.91.218'      }
+    - { name: 'First_Hawaiian_Bank_Guam - 202.128.72.186', net: '202.128.72.186'     }
+    - { name: 'First_Hawaiian_Bank_Guam - 114.142.192.14', net: '114.142.192.14'     }
+    - { name: 'First_Hawaiian_Bank_Guam - 202.128.73.226', net: '202.128.73.226'     }
+    - { name: 'First_Hawaiian_Bank_Guam - 202.151.79.186', net: '202.151.79.186'     }
+    - { name: 'First_Hawaiian_Bank_Guam - 202.151.79.187', net: '202.151.79.187'     }
+    - { name: 'First_Hawaiian_Bank_Guam - 114.142.197.6',  net: '114.142.197.6'      }
+    - { name: 'First_Hawaiian_Bank_Guam - 202.47.159.23',  net: '202.47.159.23'      }
+    - { name: 'First_Hawaiian_Bank_Guam - 40.77.167.196',  net: '40.77.167.196'      }
+    - { name: 'TCFIF - 213.148.193.22',                    net: '213.148.193.22'     }
+    - { name: 'TCFIF - 88.87.215.46',                      net: '88.87.215.46'       }
+    - { name: 'TCFIF - 217.111.25.45',                     net: '217.111.25.45'      }
+    - { name: 'TCFIF - 130.105.154.47',                    net: '130.105.154.47'     }
+    - { name: 'TCFIF - 110.54.237.54',                     net: '110.54.237.54'      }
+    - { name: 'TCFIF - 23.132.80.118',                     net: '23.132.80.118'      }
+    - { name: 'MTB - 74.118.24.210',                       net: '74.118.24.210'      }
+    - { name: 'Allow_TCFIF - 23.132.80.118',               net: '23.132.80.118'      }
+    - { name: 'Allow_Suntrust-BB_T - 74.120.64.240_28',    net: '74.120.64.240/28'   }
+    - { name: 'Allow_Suntrust-BB_T - 74.120.68.240_28',    net: '74.120.68.240/28'   }
+    - { name: 'Allow_BMO - 23.142.33.56',                  net: '23.142.33.56'       }
+    - { name: 'Allow_BMO - 23.142.33.29',                  net: '23.142.33.29'       }
+    - { name: 'Allow_BMO - 64.66.247.4',                   net: '64.66.247.4'        }
+    - { name: 'Allow_BMO - 64.66.247.1',                   net: '64.66.247.1'        }
+    - { name: 'Mazda_Manheim - 66.6.147.80',               net: '66.6.147.80'        }
+    - { name: 'Mazda_Manheim - 66.6.147.81',               net: '66.6.147.81'        }
+    - { name: 'Mazda_Manheim - 67.97.216.33',              net: '67.97.216.33'       }
+    - { name: 'Mazda_Manheim - 67.97.216.34',              net: '67.97.216.34'       }
+    - { name: 'Mazda_Manheim - 67.97.218.33',              net: '67.97.218.33'       }
+    - { name: 'Mazda_Manheim - 67.97.218.34',              net: '67.97.218.34'       }
+    - { name: 'Mazda_Manheim - 67.97.220.33',              net: '67.97.220.33'       }
+    - { name: 'Mazda_Manheim - 67.97.220.34',              net: '67.97.220.34'       }
+    - { name: 'Allow_PNC_SouthKoreaFTP - 54.180.178.214',  net: '54.180.178.214'     }
+    - { name: 'Allow Hyundai - 209.198.177.10',            net: '209.198.177.10'     }
+    - { name: 'Allow Hyundai - 209.198.177.11',            net: '209.198.177.11'     }
+    - { name: 'Allow Hyundai - 209.203.79.191',            net: '209.203.79.191'     }
+    - { name: 'Allow Hyundai - 209.203.79.10',             net: '209.203.79.10'      }
+    - { name: 'Allow Hyundai - 209.203.79.11',             net: '209.203.79.11'      }
+    - { name: 'Allow Hyundai - 209.203.79.12',             net: '209.203.79.12'      }
+    - { name: 'Allow Hyundai - 209.203.79.110',            net: '209.203.79.110'     }
+    - { name: 'Allow Hyundai - 209.198.178.245',           net: '209.198.178.245'    }
+    - { name: 'Allow Hyundai - 209.198.178.246',           net: '209.198.178.246'    }
+    - { name: 'Allow Hyundai - 209.198.178.247',           net: '209.198.178.247'    }
+    - { name: 'Allow Hyundai - 209.198.178.248',           net: '209.198.178.248'    }
+    - { name: 'Allow Hyundai - 209.198.178.249',           net: '209.198.178.249'    }
+    - { name: 'Allow Hyundai - 209.198.178.250',           net: '209.198.178.250'    }
+    - { name: 'Allow Hyundai - 209.198.178.251',           net: '209.198.178.251'    }
+    - { name: 'Allow Hyundai - 209.198.178.252',           net: '209.198.178.252'    }
+    - { name: 'Allow Hyundai - 209.198.178.253',           net: '209.198.178.253'    }
+    - { name: 'Allow Hyundai - 209.198.178.254',           net: '209.198.178.254'    }
+    - { name: 'Allow_VWC - 204.248.39.10',                 net: '204.248.39.10'      }
+    - { name: 'Allow_VWC - 63.174.218.16',                 net: '63.174.218.16'      }
+    #- { name: 'Mazda_mannheim - 66.6.147.80',              net: '66.6.147.80'        }
+    #- { name: 'Mazda_mannheim - 66.6.147.81',              net: '66.6.147.81'        }
+    #- { name: 'Mazda_mannheim - 67.97.216.33',             net: '67.97.216.33'       }
+    #- { name: 'Mazda_mannheim - 67.97.216.34',             net: '67.97.216.34'       }
+    #- { name: 'Mazda_mannheim - 67.97.218.33',             net: '67.97.218.33'       }
+    #- { name: 'Mazda_mannheim - 67.97.218.34',             net: '67.97.218.34'       }
+    #- { name: 'Mazda_mannheim - 67.97.220.33',             net: '67.97.220.33'       }
+    #- { name: 'Mazda_mannheim - 67.97.220.34',             net: '67.97.220.34'       }
+    - { name: 'AmazonAWS - 3.224.0.0_12',                  net: '3.224.0.0/12'       }
+    - { name: 'AmazonAWS - 18.128.0.0_9',                  net: '18.128.0.0/9'       }
+    - { name: 'AmazonAWS - 23.20.0.0_14',                  net: '23.20.0.0/14'       }
+    - { name: 'AmazonAWS - 34.192.0.0_10',                 net: '4.192.0.0/10'       }
+    - { name: 'AmazonAWS - 35.153.0.0_16',                 net: '35.153.0.0/16'      }
+    - { name: 'AmazonAWS - 52.0.0.0_10',                   net: '52.0.0.0/10'        }
+    - { name: 'AmazonAWS - 52.64.0.0_12',                  net: '52.64.0.0/12'       }
+    - { name: 'AmazonAWS - 54.64.0.0_11',                  net: '54.64.0.0/11'       }
+    - { name: 'AmazonAWS - 75.101.128.0_17',               net: '75.101.128.0/17'    }
+    - { name: 'AmazonAWS - 100.24.0.0_13',                 net: '100.24.0.0/13'      }
+    - { name: 'AmazonAWS - 107.20.0.0_14',                 net: '107.20.0.0/14'      }
+    - { name: 'AmazonAWS - 184.73.0.0_16',                 net: '184.73.0.0/16'      }
+    - { name: 'Imperva DNS - 45.60.152.57',                net: '45.60.152.57'       }
+    - { name: 'VPN IP Address Pool 1 - 10.245.11.0_25',    net: '10.245.11.0/25'     }
+    - { name: 'VPN IP Address Pool 2 - 10.245.11.128_25',  net: '10.245.11.128/25'   }
+    - { name: 'CVPN',                                      net: '10.245.0.0/23'      }
+    - { name: 'MONITORING_VPC',                            net: '10.249.8.0/24'      }
