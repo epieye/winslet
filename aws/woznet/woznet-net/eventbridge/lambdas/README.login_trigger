@@ -1,0 +1,19 @@
+## test it. Assuming file is main.py and handler is handler (not e.g. lambda_handler)
+# not sure this will work now as I took out the "profile"
+#python3 -c 'import main; print(main.handler({},{}))'
+
+# Also try invoking it in-place once it is uploaded. But remember there is no 'event' to parse.
+#aws lambda invoke --region=us-east-1 --function-name=login_trigger output.txt
+
+# zip it from the working directory and write it to this dir. I think -r means recursive.
+rm login_trigger.zip
+cd login_trigger
+zip -r ../login_trigger.zip .
+cd ..
+
+# Previously I was uploading the zip file to s3. But no need for that as raw code in git.
+# aws s3 cp new_function.zip s3://some_bucket/v1.0.0/new_function.zip
+
+# If the lambda is already deployed, you can just update the code
+aws lambda update-function-code --function-name login_trigger --zip-file fileb://login_trigger.zip --profile ourzoo-root --region us-east-1
+
