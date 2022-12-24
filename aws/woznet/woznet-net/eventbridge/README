@@ -1,0 +1,9 @@
+Add new rule to rules.tf
+
+# ssm is the new rule:
+cp event-rds.tf event-ssm.tf
+sed -i "s/rds/ssm/g" event-ssm.tf 
+mkdir lambdas/ssm_trigger
+
+
+
