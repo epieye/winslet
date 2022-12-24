@@ -1,0 +1,25 @@
+
+
+#For the s3-trigger lambda
+#pip3 install boto3 -t ./
+#pip3 install requests -t ./
+#pip3 install pyyaml -t ./
+
+# Test the code
+#python3 -c 'import main; print(main.lambda_handler({},{}))'
+
+# Invoke it in AWS too
+#aws lambda invoke --region=us-east-1 --function-name=ScratchyCooPark4 output.txt 
+
+# After code change. I think -r is recursive.
+
+rm s3-trigger.zip
+cd s3-trigger
+zip -r ../s3-trigger.zip .
+cd ..
+
+# And upload it to s3. Amemd the code to use s3. - not necessary. Code is in git anyway.
+#aws s3 cp lambda_function.zip s3://www.ourzoo.us/v1.0.4/lambda_function.zip
+
+# just update the code without re-applying terraform
+aws lambda update-function-code --function-name ScratchyCooPark4_2 --zip-file fileb://s3-trigger.zip --profile ourzoo-root --region us-east-1
