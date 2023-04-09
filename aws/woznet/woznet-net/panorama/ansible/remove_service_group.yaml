@@ -1,8 +1,0 @@
-# Example from docs. Adapt.
----
-
-#- name: Delete service group 'Prod-Services'
-#  panos_service_group:
-#    provider: '{{ provider }}'
-#    name: 'Prod-Services'
-#    state: 'absent'

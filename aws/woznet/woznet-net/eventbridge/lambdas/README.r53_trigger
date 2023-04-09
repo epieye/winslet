@@ -1,9 +1,0 @@
-# zip it from the working directory and write it to this dir. I think -r means recursive.
-rm r53_trigger.zip
-cd r53_trigger
-zip -r ../r53_trigger.zip .
-cd ..
-
-# If the lambda is already deployed, you can just update the code
-aws lambda update-function-code --function-name r53_trigger --zip-file fileb://r53_trigger.zip --profile ourzoo-root --region us-east-1
-

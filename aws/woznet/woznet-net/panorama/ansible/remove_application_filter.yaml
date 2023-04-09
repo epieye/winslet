@@ -1,6 +1,0 @@
-- name: Remove custom application
-  panos_application_filter:
-    provider: '{{ provider }}'
-    name: 'test-filter'
-    state: 'absent'
-
