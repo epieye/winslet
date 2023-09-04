@@ -14,6 +14,7 @@ resource "azurerm_virtual_network" "VNet1" {
   location            = local.resource_group_location
   resource_group_name = local.resource_group_name
   address_space       = ["10.77.20.0/24"]
+  depends_on = [azurerm_resource_group.resource_group]
 
   tags = {
     environment = "Lab"
@@ -25,6 +26,7 @@ resource "azurerm_virtual_network" "VNet2" {
   location            = local.resource_group_location
   resource_group_name = local.resource_group_name
   address_space       = ["10.77.21.0/24"]
+  depends_on = [azurerm_resource_group.resource_group]
 
   tags = {
     environment = "Experimental"
@@ -37,6 +39,7 @@ resource "azurerm_subnet" "subnet1" {
   resource_group_name  = local.resource_group_name
   virtual_network_name = azurerm_virtual_network.VNet1.name
   address_prefixes     = ["10.77.20.0/25"]
+  depends_on = [azurerm_virtual_network.VNet1]
 }
 
 resource "azurerm_subnet" "subnet2" {
@@ -44,6 +47,7 @@ resource "azurerm_subnet" "subnet2" {
   resource_group_name  = local.resource_group_name
   virtual_network_name = azurerm_virtual_network.VNet2.name
   address_prefixes     = ["10.77.21.0/25"] 
+  depends_on = [azurerm_virtual_network.VNet2]
 }
 
 
