@@ -34,6 +34,47 @@ resource "aws_vpc" "woznet_vpc2" {
   }
 }
 
+resource "aws_vpc" "woznet_vpc3" {
+  cidr_block = "192.168.14.0/24"
 
+  enable_dns_support   = "true"
+  enable_dns_hostnames = "true"
 
+  tags = {
+    Name = "woznet-vpc3-London"
+  }
+}
+
+resource "aws_vpc" "woznet_vpc4" {
+  cidr_block = "192.168.15.0/24"
+
+  enable_dns_support   = "true"
+  enable_dns_hostnames = "true"
+
+  tags = {
+    Name = "woznet-vpc4-Ohio"
+  }
+}
+
+#resource "aws_vpc" "woznet_vpc5" {
+#  cidr_block = "192.168.16.0/24"
+#
+#  enable_dns_support   = "true"
+#  enable_dns_hostnames = "true"
+#
+#  tags = {
+#    Name = "woznet-vpc5-Melbourne"
+#  }
+#}
+#
+#resource "aws_vpc" "woznet_vpc6" {
+#  cidr_block = "192.168.17.0/24"
+#
+#  enable_dns_support   = "true"
+#  enable_dns_hostnames = "true"
+#
+#  tags = {
+#    Name = "woznet-vpc6-Cape-Town"
+#  }
+#}
 

@@ -1,4 +1,4 @@
-resource "aws_instance" "camina" {
+resource "aws_instance" "naomi" {
   ami           = data.aws_ami.amznix2.id
   instance_type = "t2.micro"
 
@@ -6,25 +6,25 @@ resource "aws_instance" "camina" {
 
   key_name = "Toulon"
   associate_public_ip_address = false
-  vpc_security_group_ids = [aws_security_group.woznet1-sg.id]
-  subnet_id = aws_subnet.woznet_subnet_private_1a.id
+  vpc_security_group_ids = [aws_security_group.woznet3-sg.id]
+  subnet_id = aws_subnet.woznet_subnet_private_3a.id
   user_data = data.template_file.user_data.rendered
 
-  metadata_options { 
+  metadata_options {
     http_endpoint = "enabled"
     instance_metadata_tags = "enabled"
   }
 
   tags = {
-    Name = "camina"
+    Name = "naomi"
   }
 }
 
-resource "aws_route53_record" "camina_int" {
-  zone_id = aws_route53_zone.internal.zone_id
-  name    = "camina.internal.kinaida.net"
+resource "aws_route53_record" "naomi_london" {
+  zone_id = aws_route53_zone.London.zone_id
+  name    = "naomi.london.kinaida.net"
   type    = "A"
   ttl     = "60"
-  records = [aws_instance.camina.private_ip]
+  records = [aws_instance.naomi.private_ip]
 }
 

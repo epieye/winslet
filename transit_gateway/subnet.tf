@@ -79,3 +79,52 @@ resource "aws_subnet" "woznet_subnet_private_2b" {
     Name = "woznet2-subnet-private-2b"
   }
 }
+
+
+
+
+resource "aws_subnet" "woznet_subnet_private_3a" {
+  vpc_id = aws_vpc.woznet_vpc3.id
+  cidr_block = "192.168.14.0/25"
+  availability_zone = "us-east-1a"
+  map_public_ip_on_launch = "false"
+
+  tags = {
+    Name = "woznet3-subnet-private-3a"
+  }
+}
+
+resource "aws_subnet" "woznet_subnet_private_3b" {
+  vpc_id = aws_vpc.woznet_vpc3.id
+  cidr_block = "192.168.14.128/25"
+  availability_zone = "us-east-1b"
+  map_public_ip_on_launch = "false"
+
+  tags = {
+    Name = "woznet3-subnet-private-3b"
+  }
+}
+
+
+resource "aws_subnet" "woznet_subnet_private_4a" {
+  vpc_id = aws_vpc.woznet_vpc4.id
+  cidr_block = "192.168.15.0/25"
+  availability_zone = "us-east-1a"
+  map_public_ip_on_launch = "false"
+
+  tags = {
+    Name = "woznet4-subnet-private-4a"
+  }
+}
+
+resource "aws_subnet" "woznet_subnet_private_4b" {
+  vpc_id = aws_vpc.woznet_vpc4.id
+  cidr_block = "192.168.15.128/25"
+  availability_zone = "us-east-1b"
+  map_public_ip_on_launch = "false"
+
+  tags = {
+    Name = "woznet4-subnet-private-4b"
+  }
+}
+
