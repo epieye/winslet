@@ -7,6 +7,7 @@
 # what else is needed for s2s VPN?
 
 resource "aws_security_group" "woznet1-sg" {
+  description = "Bobs Internet Service"
   vpc_id = aws_vpc.woznet_vpc1.id
 
   # How do I stop it from being called terraform-20230906203909438500000004 ?
@@ -54,6 +55,7 @@ resource "aws_security_group" "woznet1-sg" {
 }
 
 resource "aws_security_group" "woznet2-sg" {
+  description = "Shazbut" # Not terraform-20230906203909438500000004
   vpc_id = aws_vpc.woznet_vpc2.id
     
   egress {
