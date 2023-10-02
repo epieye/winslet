@@ -12,6 +12,7 @@ resource "aws_instance" "amos" {
 
   metadata_options {
     http_endpoint = "enabled"
+    http_tokens = "required"
     instance_metadata_tags = "enabled"
   }
 
