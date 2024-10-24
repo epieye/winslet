@@ -2,7 +2,7 @@ resource "aws_instance" "amos" {
   ami           = data.aws_ami.amznix2.id
   instance_type = "t2.micro"
 
-  #iam_instance_profile = aws_iam_instance_profile.ec2_profile.name # Associating a profile is useful for somethings.
+  #iam_instance_profile = aws_iam_instance_profile.ec2_profile.name
 
   key_name = "Toulon"
   associate_public_ip_address = true
