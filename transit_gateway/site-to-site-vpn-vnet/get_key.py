@@ -1,5 +1,8 @@
 ##############################################################################
 #                                                                            #
+# I don't need this anymore because I have a permanent key pair in secrets.  #
+# But keep this code for future reference.                                   #
+#                                                                            #
 # Retrieve Athens private key from remote state in s3. Install in .ssh.      #
 # Tie this to the terraform so it runs automatically when creation complete. #
 #                                                                            #
@@ -42,10 +45,13 @@ for element in json_content['resources']:
       f.write(subelement['attributes']['private_key_openssh'])
 f.close
 
+## Do I have the public key?
+#for element in json_content['resources']:
+#  if element['name'] == "Athens_ssh":
+#    for subelement in element['instances']:
+#      print(subelement['attributes']['public_key_openssh'])
 
-print("chmod 600 .ssh/Athens.pem")
-print("Upload to secrets too.")
-
-
+#print("chmod 600 .ssh/Athens.pem")
+#print("Upload to secrets too.")
 
 

@@ -4,6 +4,21 @@
 #  template = file("${path.module}/user_data.sh")
 #}
 
+#[warren@gina ~]$ # arn:aws:secretsmanager:us-east-1:742629497219:secret:Athens-public-key-bAQ68F <- public
+#[warren@gina ~]$ # arn:aws:secretsmanager:us-east-1:742629497219:secret:Athens-private-key-T0NbRA <- private
+
+data "aws_secretsmanager_secret" "by_arn" {
+  arn = "arn:aws:secretsmanager:us-east-1:742629497219:secret:Athens-public-key-bAQ68F"
+}
+
+data "aws_secretsmanager_secret_version" "athens_public_key" {
+  secret_id = data.aws_secretsmanager_secret.by_arn.id
+}
+
+# also see admin_ssh_key below (i.e. update key)
+
+
+
 ## Create public IPs. Temporary. Once operational, the only access will be via the s2s VPN Tunnel and TGW.
 #resource "azurerm_public_ip" "cotyar_public_ip" {
 #  name                = "CotyarPublicIP"
@@ -67,7 +82,8 @@ resource "azurerm_linux_virtual_machine" "cotyar_vm" {
   network_interface_ids = [azurerm_network_interface.cotyar_nic.id]
   size                  = "Standard_DS1_v2"
   #custom_data           = filebase64(data.template_file.user_data.rendered)
-  custom_data           = filebase64("${path.module}/user_data.sh")
+  #custom_data           = filebase64("${path.module}/user_data.sh")
+  custom_data            = filebase64("${path.module}/cloud-init.txt")
 
   os_disk {
     name                 = "cotyar_OsDisk"
@@ -88,7 +104,8 @@ resource "azurerm_linux_virtual_machine" "cotyar_vm" {
 
   admin_ssh_key {
     username   = "azureuser"
-    public_key = tls_private_key.Athens_ssh.public_key_openssh
+    #public_key = tls_private_key.Athens_ssh.public_key_openssh
+    public_key = data.aws_secretsmanager_secret_version.athens_public_key.secret_string
   }
 
   #boot_diagnostics {
