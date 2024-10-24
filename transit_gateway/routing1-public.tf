@@ -11,6 +11,17 @@ resource "aws_route_table" "woznet1-crt" {
     transit_gateway_id = aws_ec2_transit_gateway.woznet-tg.id
   }
 
+  route {
+    cidr_block = aws_vpc.woznet_vpc3.cidr_block
+    transit_gateway_id = aws_ec2_transit_gateway.woznet-tg.id
+  }
+
+  route {
+    cidr_block = aws_vpc.woznet_vpc4.cidr_block
+    transit_gateway_id = aws_ec2_transit_gateway.woznet-tg.id
+  }
+
+
   tags = {
     Name = "woznet1-crt"
   }
