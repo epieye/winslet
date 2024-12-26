@@ -1,3 +1,20 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 resource "aws_instance" "arjun" {
   ami           = data.aws_ami.amznix2.id
   instance_type = "t2.micro"
@@ -6,16 +23,9 @@ resource "aws_instance" "arjun" {
 
   key_name = "Toulon"
   associate_public_ip_address = true
-  vpc_security_group_ids = [aws_security_group.woznet1-sg.id]
-  subnet_id = aws_subnet.woznet_subnet_public_1b.id
+  vpc_security_group_ids = [aws_security_group.woznet2-sg.id]
+  subnet_id = aws_subnet.woznet_subnet_public_2a.id
   user_data = data.template_file.user_data.rendered
-
-  root_block_device {
-    volume_size = 30
-    #volume_type = "gp3"
-    encrypted   = true
-    #kms_key_id  = data.aws_kms_key.customer_master_key.arn
-  }
 
   metadata_options {
     http_endpoint = "enabled"
