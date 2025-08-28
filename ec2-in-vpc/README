@@ -1,0 +1,3 @@
+Create a VPC and an EC2 if I need a basic setup to build upon.
+See ec2-in-default-vpc/ for an even simpler solution if I just need a host.
+

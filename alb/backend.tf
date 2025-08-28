@@ -4,8 +4,7 @@ terraform {
     bucket = "ourzoo.us"
     region = "us-east-1"
     profile = "OurzooAWSAdministratorAccess"
-    key = "woznet/vpn.tfstate"
+    key = "woznet/alb.tfstate"
     acl = "bucket-owner-full-control"
   }
 }
-
