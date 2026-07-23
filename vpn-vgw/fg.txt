@@ -1,0 +1,38 @@
+# https://docs.fortinet.com/document/fortigate-public-cloud/7.4.0/aws-administration-guide/506140/connecting-a-local-fortigate-to-an-aws-vpc-vpn
+
+
+
+
+
+power cable for FG-50E (?), FG license for one or the other. 
+fortigate command to set IP address for VPN connection. 
+
+I don't think I can afford to keep the tunnel up.
+- def not. 
+
+
+get the ip addresses from aws
+if they exist => aws1 aws2
+
+ssh admin@192.168.2.1
+
+
+config vpn ipsec phase1-interface
+
+
+edit "Tunnel1"
+
+
+
+set interface "wan1"
+ set remote-gw ${aws1}
+end
+
+
+edit "Tunnel2"
+
+set interface "wan1"
+ set remote-gw ${aws2}
+end
+
+

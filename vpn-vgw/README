@@ -1,0 +1,11 @@
+
+
+
+Start with VGW: FG to one VPC.
+But TGW is more useful. Multiple VPCs perhaps multiple on-prem. Can I route to the internet? 
+
+
+On the Ourzoo side, on the FG
+Use the wizard. Fallen at the first hurdle. The only options are FG and Cisco.
+
+

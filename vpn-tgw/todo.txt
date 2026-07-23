@@ -1,0 +1,8 @@
+# add a private zone so chrisjen knows about naomi.
+# But this won't extend to the home network. So why bother. 
+# I can => Route 53 Resolver endpoint
+
+# Also naomi isn't using nat. 
+
+
+# should I set up bgp or do that in another folder?
