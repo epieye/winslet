@@ -134,26 +134,26 @@ resource "aws_security_group" "woznet-public-sg" {
     from_port = 22
     to_port = 22
     protocol = "tcp"
-    cidr_blocks = ["50.168.198.58/32", "172.125.57.137/32"]
+    cidr_blocks = ["32.141.185.206/32", "172.125.57.137/32"]
     ipv6_cidr_blocks = ["2600:1700:3b20:6ff0:e2cb:4eff:fefc:14bb/128"] 
   }
   ingress {
     from_port = 80
     to_port = 80
     protocol = "tcp"
-    cidr_blocks = ["50.168.198.58/32", "172.125.57.137/32"]
+    cidr_blocks = ["32.141.185.206/32", "172.125.57.137/32"]
   }
   ingress {
     from_port = 443
     to_port = 443
     protocol = "tcp"
-    cidr_blocks = ["50.168.198.58/32", "172.125.57.137/32"]
+    cidr_blocks = ["32.141.185.206/32", "172.125.57.137/32"]
   }
   ingress {
     from_port = -1
     to_port = -1
     protocol = "icmp"
-    cidr_blocks = ["50.168.198.58/32", "172.125.57.137/32"]
+    cidr_blocks = ["32.141.185.206/32", "172.125.57.137/32"]
   }
   ingress {
     from_port = -1
@@ -178,7 +178,7 @@ resource "aws_security_group" "woznet-public-sg" {
 #
 #resource "aws_vpc_security_group_ingress_rule" "woznet-public-sg-rule1" {
 #  security_group_id = aws_security_group.woznet-public-sg.id
-#  cidr_ipv4   = ["50.168.198.58/32", "172.125.57.137/32"]
+#  cidr_ipv4   = ["32.141.185.206/32", "172.125.57.137/32"]
 #  from_port   = 22
 #  ip_protocol = "tcp"
 #  to_port     = 22
