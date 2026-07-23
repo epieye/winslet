@@ -1,3 +1,37 @@
-Matthias pointed to https://aws.amazon.com/vpc/lattice/
-But oh boy. What an undertaking.
-On the face of it, is it like a load balancer? Or at least how we use the load balancer.
+I give up. This is far from simple. 
+Forwarding from the external-facing ALB to the EC2 is way simpler.
+
+Try again one day if I can be bothered
+https://alexandrahuides.medium.com/getting-started-with-amazon-vpc-lattice-b581769f0b80
+
+
+
+
+Create VPCs in Ourzoo and Kinaida.
+TGW
+internet-facing ALB in Ourzoo
+internal ALB in Kinaida
+Perhaps add London and Auckland
+Type alb?
+Lattice in Kinaida
+
+
+
+
+[warren@Rocinante warren] $ # Do I need to tie the TGW to the public routing table? 
+[warren@Rocinante warren] $ # or attach it to the table? 
+[warren@Rocinante warren] $ # do I need a nat gw after all? 
+[warren@Rocinante warren] $ # Yes, because otherwise I don't have a nat.
+[warren@Rocinante warren] $ # Right IGW only has NAT for it's own VPC.
+[warren@Rocinante warren] $ # is this why I have public and private in NSI?
+[warren@Rocinante warren] $ # I can certainly convince myself that it is the case. 
+[warren@Rocinante warren] $ # remember to tear down spoke accounts before the core-network. 
+[warren@Rocinante warren] $ 
+[warren@Rocinante warren] $ # Do I need a bucket policy for Kindaida->ourzoo? I though I had that.
+[warren@Rocinante warren] $ # Give up for now. This is not what I want to be working on.
+[warren@Rocinante warren] $ # But it would be good to understand it. 
+
+
+test the alb type - but I think that's only in the same vpc
+- also need to create an alb in kinaida
+deploy lattice

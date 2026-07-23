@@ -1,17 +1,3 @@
-# https://registry.terraform.io/modules/aws-ia/ipam/aws/latest
-# Description for IPAM instead of IPAM with primary in us-east-1
-# ipam-0650a312aa843d831 - winslet
-# ipam-06980e9f74ab8805e - bespin 
-# I won't need two in prod.
-
-#module "built-in" {
-#  source  = "aws-ia/ipam/aws"
-#  version = "1.0.0"
-#
-#  top_description = "DefaultVPC"
-#  top_cidr = ["172.31.0.0/16"]
-#  ipam_scope_type = "private"
-#}
 
 module "winslet" {
   source  = "aws-ia/ipam/aws"
