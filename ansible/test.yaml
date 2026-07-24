@@ -1,0 +1,9 @@
+---
+- name: Install certificates on Palo Alto Devices
+  hosts: all
+  gather_facts: no
+  connection: local
+  collections:
+    - paloaltonetworks.panos
+    - amazon.aws.aws_secret
+

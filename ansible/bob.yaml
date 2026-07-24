@@ -1,0 +1,18 @@
+#
+#
+# This works as far as I have gone, but it makes much more sense to use the panos ansible module.
+#
+#
+
+---
+- name: Playbook for testing how to run a python file
+  hosts: all
+  tasks:
+  - name: execute python file
+    #when: "'wild.onedatascan.com' in fqdn and 'panorama' in inventory_hostname"
+    script: bob.py
+    args:
+      executable: python3
+    environment:
+      TEST: "something"
+
