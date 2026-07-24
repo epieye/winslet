@@ -1,0 +1,9 @@
+Section 5: VPC DNS and DHCP
+local DNS can also be resolved using 169.254.169.253
+the VPC "knows" that DNS is .2 because DHCP
+- default DHCP option sets it
+- also NTP. So why do I seem to have problems with time? 169.254.169.123
+Exam essentials:
+253 as in 53
+Outbound endpoints. I'd still need a DNS server on prem.
+

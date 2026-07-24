@@ -1,0 +1,20 @@
+10 Transit Gateway
+
+WTF is transit gateway appliance mode?
+
+Do I need to know about SDWAN? Perhaps remember it uses a GRE tunnel. 
+
+
+Multicast?
+85 Transit Gateway multicast
+
+Jesus. I suck.
+
+Maybe watch section 10 at speed if I have time.
+
+
+
+Route53 especially route resolver. 3 fucking hours.
+- I probably won't take it all in anyway. 
+
+

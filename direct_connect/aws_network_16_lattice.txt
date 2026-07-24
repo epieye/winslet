@@ -1,0 +1,26 @@
+Section 16: VPC Lattice
+service-to-service (application-to-application) communication
+useful for microservices
+
+Features for exam:
+- Connectivity - cross VPCs and cross accounts
+- protocols - http https gRPC for lattice services and TCP/TLS for VPC lattice resources
+- Request routing - path based, method, weighted
+- security - IAM authorization, security groups
+- targets - ec2 instances, lambda functions, IP address, ALB/NLB
+-- eks services can be registered with AWS gateway api controller 
+-- ecs services can be registered using ALB/NLB
+- VPC lattice service, resource and network sharing with RAM
+- NAT and NAT64 for supporting overlapping CIDR and IPv4<->IPv6 traffic
+
+Summary
+- Enables service-to-service communication across multiple VPCs and AWS accounts, eliminating the need for complex network configurations lie peering or transit gateway
+- supports targets such as EC2, IP, EKS/ECS, ALB/NLB, lambda
+- dynamic routing rules allow traffic to be directed to specific service instances or groups based on HTTP headers, paths, or other conditions
+- services registered in vpc lattice can be accessed using custom DNS names which simplifies endpoint management and service discovery
+- integration with vpc endpoints allow services outside the service network to securely connect to VPC lattice, enabling hybrid cloud use cases and on-premises access.
+- utilize aws iam policies to enforce fine grained access controls for communication between services within the network (NONE and AWS_IAM).
+
+aside: VPCe. 
+
+

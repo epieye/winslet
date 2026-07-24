@@ -1,0 +1,25 @@
+8 VPC private connectivity: VPC_peering
+
+Connecting to the services is useful => VPCe
+gateway (only s3 and dynamo DB), and interface (=>ENI)
+private link
+
+
+
+
+9 VPC Private Connectivity: VPC endpoint and Private Link
+
+VPC gateway endpoint
+
+VPC Private Link
+- interface endpoint, resource endpoint, service-network endpoint = lattice endpoint 
+- gateway load balancer endpoint
+
+S3 and Dynamo DB might be interface endpoint if via network load balancer
+
+Private link was the thing to allow other customers to access our services internally. 
+- 
+
+
+Exam essentials:
+I just can't pay attention

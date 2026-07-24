@@ -1,0 +1,49 @@
+Section 12: Site-to-Site VPN.
+
+Do I need to know that the VPGW supports AES-256 and SHA-2 for encryption and data integrity.
+Is there really nothing new in this section?
+- I did think I need more resources in AWS. But let's create a VPN and make sure.
+Is his customer gateway the libreswan instance?
+UDP 4500 is for NAT traversal. Otherwise 500. <= I need to enable NAT-Traversal.
+AWS limited to 100 propogated routes. => Do not publish more than 100 routes from on-prem network.
+- consolidate routes instead,
+Transative routing
+- review why I can't use a NATGW but I can use a NAT instance for transitive routing. (96)
+- I think this is just that AWS doesn't allow it rather than a good technical reason. I've seen this before.
+The asymmetric routing thing if active/active: cannot influence decision in static routing.
+but dynamic routing can set one or other, with dynmaic failover if it fails.
+influence with ASPATH. If same length, use MEDs. Multi-exit-discriminators. 
+active/passive: 
+dead peer detection. customer router needs to support dbd when using dynamic routing. also timeout.
+VPN monitoring. Cloudwatch metrics. 
+- TunnelState TunnelDataIn TunnelDataOut - cloudwatch alert with SNS
+- Also Health Dashboard 
+Site-to-Site VPN architectures: can have VPN in TGW. Cool but stage 3. This is what we did.
+- presumably the benefit it what we use it for, multiple VPCs to connect to. 
+- But VGW can support multiple VPNs to various on-prem. Actually can't have multiple VGWs associated with a VPC.
+- can connect multiple branch offices with TGW too. Love TGW.
+- I can have both FGs connecting to the same VGW for redundancy. 
+VPN Cloud Hub: detached mode, just vpn gateway to connect branch offices, not connected to vpc. 
+- up to 10 customer gateways
+- also connect to VPC. 
+- wait. is vpn gateway the same as virtual private gateway? Yes. so whay doesn't he say that? 
+Transit VPC: Hmmm. This guys says software VPN on EC2. But why wouldn't a TGW work? 
+- Perhaps it won't allow on-prem to internet via TGW? 
+- So after all that, he has an addedum that TGW also solves it. But does it allow on-prem to access internet?
+- most questions are going to be TGW but e.g. overlapping CIDRs still needs Transit VPC. 
+look up ec2 auto recovery thing for openvpn.
+Can the public addresses for the VPN endpoints not be EIP? 
+For transit VPC, you still have a VGW in the spoke VPCs. That sounds stupid.
+The lectures didn't mention DS. Maybe that's the takeaway; EC2 is the answer.
+
+Thanks bob I got through one section. Painful. But still lots to learn. 
+
+
+
+Accelerated VPN is only supported on transit gateway.
+Public IPs cannot be changed? Really?
+IPv6 must be configured during VPN creation
+IKE, DPD, lordy. 
+
+what is a certificate based vpn? can I do this? 
+- possibly a cert instead of a psk. So not much benefit.

@@ -1,0 +1,34 @@
+Network Performance and Optimization.
+
+
+
+Jumbo frames
+- 9001 inside the VPC.
+- most useful when PPS is the bottleneck
+
+Instance-level
+ EC2 enhanced networking
+ - SR-IOV - Single Root Input/Output Virtualization:by-pass hypervisor
+ - ENA - Elastic Network Adapter
+ - Intel VF 82599
+
+ Cluster placement - same rack for lower latency
+ EBS optimized instances
+
+OS-level
+ DPDK Data Plane Development Kit - by-pass kernel for high performance. Improves packet processing.
+
+EFA is ENA with additional OS-bypass capabilities
+- Elastic Fabric Adapter
+
+Exam essentials:
+- MTU, Jumbo frames
+- Max bandwidth within region is 100 Gbps (With ENA);  
+- Internet/DX 50% of available bandwidth for instance, or 5 Gbps single-flow to 10 Gbps is same cluster group.
+                                                       ^ I've seen an exam question that relies on knowing
+                                                         a flow is limited to 5 Gbps.
+
+
+
+
+

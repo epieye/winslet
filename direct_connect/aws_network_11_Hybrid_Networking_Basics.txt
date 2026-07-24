@@ -1,0 +1,9 @@
+Section 11: Hybrid Networking basics
+
+LOCAL_PREF - highest value is preferred
+MED - lowest value is preferred - only used if ASPATH and LOCAL_PREF are the same.
+private AS 64512 to 65534. default is 64512 cannot be changed afterwards.
+only a VGW? I thought I also need a CGW in the VPC. - let's do this somehow.
+
+transit VIF
+

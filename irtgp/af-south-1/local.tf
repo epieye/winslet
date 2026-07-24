@@ -1,0 +1,17 @@
+locals {
+  region   = "af-south-1"
+  location = "CapeTown"
+  cidr1    = "192.168.0.0/22"
+  subnet1  = "192.168.0.0/24"
+  subnet2  = "192.168.1.0/24"
+  subnet3  = "192.168.2.0/24"
+  subnet4  = "192.168.3.0/24"
+  cidr2    = "10.0.0.0/22"
+  subnet5  = "10.0.0.0/24"
+  subnet6  = "10.0.1.0/24"
+  az1      = "af-south-1a"
+  az2      = "af-south-1b"
+  ec2_name = "capetown"
+  ec2_type = "t3.micro"
+  keypair  = "CapeTown"
+}

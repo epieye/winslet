@@ -1,0 +1,31 @@
+Section 17: CloudFront
+CDN. 
+225+ mostly at edge.
+Also protect against DDOS.
+Integrate with AWS shield and AWS WAF and Route53
+Can expose external HTTPS and can talk to internal HTTPS backends
+Also supports websocket protocol
+Can upload files through cloudfront 
+Enhanced security with Origin Access Control (OAC)
+S3 as an Origin
+- nothing interesting apparently
+ALB or EC2 as Origin
+- front end MUST be public
+May have multiple origins or origin group.
+Origin headers - custom headers
+- Do I need to memorize the headers?
+OAC was OAI
+- bucket policy - only cloud front IPs can access the bucket
+Can put a WAF between users and cloudfront, and another one before the ALB (WAF denies request without custom header)
+Custom code at the edge. 
+also lambda @edge
+cloudfront functions vs lambda@edge
+
+Global Accelerator. I had a question. What was it?
+Similar to load balancer. GA, Listeners, endpoint groups=ALB,NLB,EC2 => global anycast address
+- Basically the opposite of Hot Potato routing.
+GA vs CF: proxy vs cache
+- Could we use GA? Maybe. But it is expensive.
+
+
+

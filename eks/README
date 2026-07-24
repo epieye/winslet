@@ -1,0 +1,98 @@
+#
+#
+
+ECS: and EKS are container orchestration services.
+Fargate: is a serverless compute engine that can be used as a launch type for both ECS tasks and EKS pods,
+abstracting away the underlying server infrastructure. This allows you to run containers without managing
+servers, simplifying operations and potentially optimizing costs.
+If not fargate then cluster runs on EC2s.
+
+Cluster - master and nodes, nodes run the actual workload.
+Pod - one or more containers (usually one). 
+Controller
+Service
+
+This directory is so I can examing networking in EKS.
+Also to learn more about EKS.
+
+So create it the Datascan way.
+
+VPC + 3 subnets => use my standard set up (networking.tf) and stop recreating the same thing all the time.
+- but in this case, create an extra public and private subnet in c. And related resorces.
+
+
+Et volia, I have the platform.
+
+What next?
+
+Build a EKS cluster over the 3 subnets. But I don't want to use the module (yet).
+
+Now the work begins. Look at what I had in Gina.
+eks, kms, iam
+I'm sure that's not everything. What about my app?
+I guess I need a container for a web server at least.
+How do I add those containers to the cluster?
+
+
+
+---
+After provisioning your cluster, you need to configure kubectl to interact with it:
+
+aws eks --region $(terraform output -raw region) update-kubeconfig --name $(terraform output -raw cluster_name)
+kubectl cluster-info
+kubectl get nodes
+
+kubectl apply -f web-server-deployment.yaml
+kubectl apply -f web-server-service.yaml
+
+what's the difference kubectl create and kubectl apply?
+- Use kubectl create for initial, imperative creation of resources where you are certain the 
+resource does not already exist.
+- Use kubectl apply for declarative management, especially when you need to create, update, 
+or manage the lifecycle of resources based on a desired state defined in a manifest file. 
+kubectl apply is generally recommended for managing Kubernetes resources in a continuous 
+and version-controlled manner.
+
+How on earth does it get here?
+- Client connects to the cluster master
+- Presumably master delegates to the node -> service -> pod -> container.
+
+Ok so in my case, am I creating something that is externally accessible?
+- ultimately I want public and private
+
+so do I connect to the eks cluster endpoint?
+internally I guess I can connect http://<node IP address>:31871
+
+
+
+The endpoint is the answer, but I don't have access. I knew the IAM was incomplete.
+
+
+
+---
+all well and good but I don't know the pieces and how they fit together,
+
+aws_eks_cluster
+
+kubernetes_service
+kubernetes_pod
+kubernetes_namespace
+kubernetes_deployment
+
+web-server-service.yaml
+web-server-deployment.yaml
+
+
+Remember the point is to understand kubernetes networking and if there is anything useful we can tweak.
+
+
+---
+Bring up a EKS cluster purely with AWS, with helm etc. If that's possible.
+It seems like I can do almost everything, but the last step is kubectl.
+After the EKS cluster is provisioned, update kubeconfig to connect kubectl to the new cluster.
+- aws eks update-kubeconfig --name <your-cluster-name> --region <your-region>
+- kubectl cluster-info
+- kubectl get nodes
+
+
+

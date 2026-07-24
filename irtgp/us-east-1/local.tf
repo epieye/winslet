@@ -1,0 +1,17 @@
+locals {
+  region   = "us-east-1"
+  location = "Ashburn"
+  cidr1    = "192.168.12.0/22"
+  subnet1  = "192.168.12.0/24"
+  subnet2  = "192.168.13.0/24"
+  subnet3  = "192.168.14.0/24"
+  subnet4  = "192.168.15.0/24"
+  cidr2    = "10.0.12.0/22"
+  subnet5  = "10.0.12.0/24"
+  subnet6  = "10.0.13.0/24"
+  az1      = "us-east-1a"
+  az2      = "us-east-1b"
+  ec2_name = "ashburn"
+  ec2_type = "t2.micro"
+  keypair  = "Ashburn"
+}

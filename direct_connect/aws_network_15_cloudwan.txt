@@ -1,0 +1,41 @@
+
+Section 15: AWS Cloud WAN. 
+- Use this is you have a global network and interregion transit gateway peering is too complicated. 
+
+SDWAN?
+Remember Transit Gatewy peering doesn't allow dynmaic routing => AWS Cloud WAN
+Core Network Edge (CNE) is 50c per hour + 2c per gigabyte. Too expensive to test.
+CNE is per region. Peer SDWAN, VPC, TGW, VPN
+Core Network Policy. 
+Home region for storing data is Oregon no matter where you really are.
+Attachments per segment (isolate prod, dev etc)
+Static routes? I thought the benefit over interregiona transit gateway peering is the dynamic routing. 
+- Isolate attachments default false / like VRF
+- require attachment acceptance default true
+- allow or deny list to allow share routes
+- routes can be shared through share segment action or by adding static routes 
+- segment action: share segments or create static routes
+
+** for the exam, understand parameters. **
+
+Direct Connect doesn't connect directly to cloud wan. Connect via transit gateway.
+
+
+components of the cloud wan
+- global network = core networks + transit gateway network
+- core network edge   - regional routers in AWS regions
+- core network policy - 
+- network segments (dev, prod, shared, etc ....)
+- segment actions (what is shared, what is isolated)
+- attachments with attachement policues
+- peering i.e. existing TGW.
+
+
+core networks can be shared across accounts with RAM
+Cloud WAN currently supports attachments such as:
+- VPC
+- site-to-site VPN
+- SDWAN
+- transit gateway route table (for connecting existing tgw)
+
+

@@ -1,0 +1,17 @@
+locals {
+  region   = "eu-west-2"
+  location = "London"
+  cidr1    = "192.168.8.0/22"
+  subnet1  = "192.168.8.0/24"
+  subnet2  = "192.168.9.0/24"
+  subnet3  = "192.168.10.0/24"
+  subnet4  = "192.168.11.0/24"
+  cidr2    = "10.0.8.0/22"
+  subnet5  = "10.0.8.0/24"
+  subnet6  = "10.0.9.0/24"
+  az1      = "eu-west-2a"
+  az2      = "eu-west-2b"
+  ec2_name = "london"
+  ec2_type = "t2.micro"
+  keypair  = "London"
+}

@@ -1,0 +1,82 @@
+Section 14: AWS Direct Connect (DX)
+
+I can create some of the resources, I just won't have an actual connection.
+Remember the exam had questions with multiple DX connections. 
+
+Private VIF to connect DX router to my VPC. Public VIF for public services like S3. Transit VIF for TGW.
+Gateway type 
+- Direct  Connect Gateway for multiple VPCs and regions. 
+- Virtual Private Gateway for single VPC in the same region. 
+VIFs are connected to the physical connection. Up tp 50 with separate VLANs. See the diagram. 
+Hosted VIF - VIF owner is someone else. Why? Centralized networking like NSI. 
+Transit VIF - Transit GW - but via Direct Connect Gateway (Not directly)
+LAG - multiple DX as one logical connection. 
+VIF parameters: VIF owner, VLAN ID unless provided by hosted connection, gateway type (VPG, DCGW), BGP.
+- also BGP MD5 authentication key. Jumbo frames for private or transit VIF.
+Public VIF to connect DX router to 
+
+/24 = 256 - network and broadast = 254 usable addresses. 10.0.0.0/24 - 10.0.0.0 - 10.0.0.255
+/25 = 128 - network and broadast = 126 usable addresses. 10.0.0.0/25 - 10.0.0.0 - 10.0.0.127
+/26 = 64  - network and broadast =  62 usable addresses. 10.0.0.0/26 - 10.0.0.0 - 10.0.0.63
+/27 = 32  - network and broadast =  30 usable addresses. 10.0.0.0/27 - 10.0.0.0 - 10.0.0.31
+/28 = 16  - network and broadast =  14 usable addresses. 10.0.0.0/28 - 10.0.0.0 - 10.0.0.15 
+/29 = 8   - network and broadast =   6 usable addresses. 10.0.0.0/29 - 10.0.0.0 - 10.0.0.7
+/30 = 4   - network and broadast =   2 usable addresses. 10.0.0.0/30 - 10.0.0.0 - 10.0.0.3
+/31 = 2   - network and broadast =   0 usable addresses? I guess first and last is just convention.
+/32 = 1   I can understand this is a special case, like /0
+
+I provide a /30 for network endpoints, or AWS will provide a /31.
+AWS advertise all their prefixes over BGP. What if I am not running BGP? No access to non-AWS prefixes.
+Am I confusing this with a VPCe?
+Is it the case that VPCe provices the same function? 
+- for my lambda in the VPC, is the VPCe to allow the connection from the lambda to the VPC, or VPC to lambda?
+- think of the VIF as an actual router interface.
+Can I create a DX connection with a down state at no cost, and test public VIF? Why, it won't work anyway.
+
+Private VIF to access private resources inside VPC
+- can only access resources in that region. Unlike public.
+- But see direct connect gateway
+
+- announce 100 routes and populate routing table. I think it was 1000 for public.
+- ^ if enabled for the subnet
+
+Private VIF does not provide access to VPC DNS - use endpoint resolver.
+Private VIF does not provide access to gateway endpoints. 
+- i.e. corporate network will not access it. Does this mean I can't add it to my firewall?
+But I can access interface endpoints. Like what?
+
+Transit VIF to connect DX and TGW.
+He says TGW is regional. I'm sure I've done it across regions. Check that. 
+Multiple TGWs can connect to a DX gateway. 
+Also multiple DX to a TGW. 
+DX gateway => multiple VPCs over same DX connection
+- DX directly to VPCs -> Private VIF in each VPC in same region. Each with BGP session.
+- DX gateway to multiple VPCs -> one private VIF from DX to DXG, possibly multiple regions.
+- DXG is also private, cannot access public.
+- DXG and Private VIF in same account, but VPCs can be in other accounts.
+- DXG does not allow VPC-VPC (only for on-prem data center I guess). Unlike TGW.
+- Max 100 routes for each IPv4 and IPv6.
+- DXG can connect to up to 20 VPCs (VGWs)
+- Multiple DXG with separate private VIFs to increase 20 VPC limit (20 VPC per DXG)
+- Multiple DX with separate private VIFs to one DXG for global data centers. But still VPCs can't contact each other.
+-- Also Data Centers can't communicate with each other through DXG
+- no charge for DXG, but egress traffic is charged
+
+125. DX Gateway with Transit VIF and Transit Gateway.
+So if I connect a DX and DXG across a transit VIF, the it can connect to a TGW in a particular region.
+Can connect up to 4 transit vifs per DX - to 4 DXG, which in turn connect to TGWs. 
+Limit 6 TGW associations per DXG. => Up to 24 transit gateways in various regions per DX
+Advertise up to 200 routes per transit gateway
+dxg and transit vif must be owned by same account; transit gateways can be owned by different AWS accounts.
+
+126. Direct Connect SiteLink. 50c/hr + data transfer cost
+Connect between DX locations over AWS backbone network. 
+
+ 
+
+
+
+
+
+
+

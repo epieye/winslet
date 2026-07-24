@@ -1,0 +1,18 @@
+#########################################
+#                                       #
+# Inter Region Transit Gateway Peering. # 
+#                                       #
+# Ashburn  us-east-1                    #
+# London   eu-west-2                    #
+# Auckland ap-southeast-6               #
+# CapeTown af-south-1                   #
+#                                       #
+#########################################
+
+# First create iam_common in this directory.
+# Bring up regions: cd asburn/ london/ auckland/
+# Peer the transit gateways: cd irtgp/ 
+
+# If I add Captown:
+# Ashburn-Capetown, London-Capetown, Auckland-Capetown. That won't be confusing at all. 
+

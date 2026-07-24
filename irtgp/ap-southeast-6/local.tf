@@ -1,0 +1,17 @@
+locals {
+  region   = "ap-southeast-6"
+  location = "Auckland"
+  cidr1    = "192.168.4.0/22"
+  subnet1  = "192.168.4.0/24"
+  subnet2  = "192.168.5.0/24"
+  subnet3  = "192.168.6.0/24"
+  subnet4  = "192.168.7.0/24"
+  cidr2    = "10.0.4.0/22"
+  subnet5  = "10.0.4.0/24"
+  subnet6  = "10.0.5.0/24"
+  az1      = "ap-southeast-6a"
+  az2      = "ap-southeast-6b"
+  ec2_name = "auckland"
+  ec2_type = "t3.micro"
+  keypair  = "Auckland"
+}

@@ -1,0 +1,172 @@
+
+VPCs per region: 5 I knew that. Max 100s. Equally IGW.
+subnet per VPC: 200
+IPv4 CIDR blocks per VPC: 5 max 50
+IPv6                    : 1 cannot be increased
+200 Network ACLs per VPC, 20 rules per Network ACL
+200 route tables per VPC and 50 routes per route table
+2500 security groups per region. 60 rules per security group. 5 per interface.
+A NAT gateway can support up to 55,000 simultaneous connections to each unique destination
+
+802.3ad is lacp
+802.1q  is vlans
+
+placement groups
+My transit gateway spans regions. But the VPC is within the regions, but may contain AZs.
+
+charges in and out even within vpc
+
+Enhanced networking
+ENA supports speeds up to 100 Gbps
+SR-IOV Single Root Input/Output Virtualization
+
+Default VPC, IGW, and public subnets. Well fuck.
+
+You can access a s3 bucket out of region. <- So I don't need a bucket in the region? Nice!
+- OK, I guess there are unique, but still.
+
+If the instance is stopped and started the same EIP address will persist
+
+Which configuration options must be configured when setting up a Private VIF for Direct Connect?
+- Virtual Private Gateway, VLAN, BGP ASN
+
+Which components are required in order to create an AWS Managed Hardware VPN?
+- Customer Gateway and Virtual Private Gateway
+
+What is the maximum number of IP Prefixes that can be advertised into AWS Direct Connect?
+- 100
+
+-----
+
+Remember too IGW vs NAT. NAT in public subnet. 
+The NAT needs the IGW. That's why we have IGW in inspect. 
+
+1
+2
+3
+4
+5
+6
+
+7 security and monitoring
+max 5 security groups to an instance
+applied to ENI
+all outbound traffic by default
+metadata 169.254.169.254
+by default, ACLs allow traffic
+200 Network ACLs per VPC, 20 rules per Network ACL
+Each subnet can only be associated with a single Network ACL
+New Network ACLs block all traffic by default <-
+Associated with subnets
+I've always been confused with security group as the source
+- it just means the devices that sg is attached to
+Limit 5 VGW per region. Attach to a VPC like a IGW.
+Is VGW only for VPN? And Direct connect (or is that VPN over direct connect too?)
+gateway vpce on edge of vpc, interface vpce is in the vpc with an address for that vpc. DNS gets updated.
+private link via vpce
+endpoint services. This makes sense but what would EC2 endpoint service mean?
+Ah. My vpce gives an address in my subnet. That's cool. What about on the vendor side? Do they allow traffic from load balancer?
+WAF vs WAF Classic
+Flow logs. Like Netflow summaries.
+- IAM role to allow post to cloudwatch
+What was the difference with SG and ACL for flow log?
+- Ah, I bet the source/destination was reversed. Inferring outbound ACL blocked it. 
+Limitations: Traffic not captured by flow log
+. AWS DNS server
+. Windows license activation
+. DHCP
+. traffic to the reserved IP address for the default VPC router.
+
+8 ELB
+vpc ingress routing - security solutions from marketplace 
+- oh is this what we use to send lb traffic to the palo?
+- we have gwlb. utlizes ingress routing
+gw lbe - gwlb has its own routing table <- check again on this
+igw routes all traffic to the ENI (?) or the GWLB?
+I've never understood why inspect and egress have IGW. 
+Everything comes through ingress to the GWLB in inspection, right?
+create a routing table for the Internet Gateway and attach a rule to direct all traffic to the EC2 instance ENI
+Maybe that's not what we do. Routed to transit gateway. 
+default route to vpc-033010a222d774cf2 (inspection)
+ok but how does it get from the tgw to the gwlb? 
+I also don't fully understand the routing (why so many tables). 
+Are there any public addresses in inspect or egress? 
+I'm losing focus but come back to this. I do need to understand it. 
+Ok so how does tgw get to gwlb? 
+all incoming traffic goes to GWLB. GWLB target group is the palos
+- a-ha a vpce. But his is the tgwa routing table. Because all traffic. 
+vpce - interface endpoints and gateway endpoints (main). GatewayLoadBalancer. 
+I think I understand vpce when it comes to accessing s3 - puts it in the vpce instead of public. 
+OK good. 
+
+9 Route 53 (skip demos)
+SLA is 100%
+health checks for redirection
+weighted, latency-based, failover, geolocation
+
+10 Cloud front
+
+11. Hybrid Cloud.
+DR
+software VPN
+hardware VPN
+static hardware VPN (static routes rather than BGP)
+- customer gateway - like on-prem router
+- virtual gateway 1:1 VPC (like IGW (?))
+- he seems to be using software router for client vpn (e.g. openvpn) and hardware for site-to-site.
+- I certainly didn't create a cgw or vgw for openvpn
+- I need more experience with routing, not just static. Propogation.
+must use a specific address for Inside Cidr for tunnelX 169.254.6.0/30 per vgw. 
+highest weight wins. directly connected 32768. more important than AS hops.
+as for private connect 64512 65534
+
+Come back to 90-96 if I have time.
+
+12. Direct connect comes up a lot. docs.
+There are no charges for transfer in via Direct Connect. Out will vary. 
+VGW is needed to make it work. With VIF connection. Peer IP addresses for BGP. 
+Public VIF to connect to public services zone e.g. s3 and dynamoDB (reduces transfer costs). Not really getting this. 
+Hosted connection with a partner not directly to AWS. One vlan but more choice with speed. 
+
+13. Disaster recovery. AWS DR white paper.
+RPO Recovery Point Objective
+RTO Recovery Time Objective
+test DR plans regularly
+route53 failover routing - might be useful to look into
+pilot light
+warm standy
+- RTO is lower.
+active/active
+- multi-site aka full
+
+14. Billing and costs
+Direct connect: 0.02-0.15 transfer out. 
+EC2 out 
+no charge for data in.
+load balancer 2.25c/hr varies on AZ too. 
+cloud front in 0 out 0.02-0.25
+across AZ per GB charge 0.01 in too
+redshift in 0 with AZ
+EC2 within AZ is 0 (private)
+
+VPC pricing
+NAT gateway same region no charge
+There are charges for data transfer across AZs - key exam item
+lots of sneaky ways to charge you
+vpce to access s3 across private network might save a bit
+
+Typically no charge to bring data in.
+
+
+---
+For me:
+site to site VPN via FortiGate 
+- can i get a second internet connection with the firewall wan interface on it? IP Passhrough. 
+- I'm thinking of buying support for Fortinet.
+VPCe to access S3
+for private link, would the service appear for everyone? How else would it know?
+AWS config might be useful if it is across accounts. 
+
+
+
+

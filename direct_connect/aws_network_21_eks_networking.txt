@@ -1,0 +1,55 @@
+
+Section 21: Amazon EKS Networing
+I should know what is a container, what is microservices, and what is kubernetes.
+kubernetes - orchestration
+Well complicated, so many tools. And all the buzz words too. Artifact. Dockerfile. 
+ECS ECR EKS
+How much detail do I need to know for the network exam?
+kubectl 
+self-managed, managed nodes group, 3rd option is Fargate - no machines to manage
+probably more relevant: Amazon EKS Cluster Networking
+It's recommemended to have separate subnets for each EKS ENI. EKS needs at least 6 IPs in each subnet (16 recommended). What? Is this a network interface?
+- does it mean the CIDR? Or just used by EKS?
+EKS cluster endpoint access - Public (default)
+- Is this how it works at DS? Surely not.
+- more likely public and private.
+- ah can have entirely private - vpn, direct connects, workspace
+most important: EKS pod networking 
+Container Network Interface (CNI)
+Pods, worker nodes, containers
+Amazon EKS officially supports the Amazon VPC CNI plugin for Kubernetes
+Also Calico, Cilium, WeaveNet, Antrea.
+Maximum pods per node: m5.large maximum network interfaces=3 private ipv4 addresses per interface=10 (same ipv6)
+                       m5.xlarge                           4                                      15
+                       m5.2xlarge                          4                                      15
+                       m5.4xlarge                          8                                      30
+max pods 3x(10-1)+2=29
+Increased available IP addresses for Pods - only on nitro - prefix delegation - entire cidr for Ec2 ENI
+- /28 for ipv4 /80 for ipv6 280 trillion
+- many. many pods on same EC2. 434. but recommended 110
+
+My review:
+Fargate ECS EKS. ECR is separate.
+ECS: and EKS are container orchestration services.
+Fargate: is a serverless compute engine that can be used as a launch type for both ECS tasks and EKS pods, 
+abstracting away the underlying server infrastructure. This allows you to run containers without managing 
+servers, simplifying operations and potentially optimizing costs.
+If not fargate then cluster runs on EC2s.
+
+Security groups <- important in exam
+Remember issues is SG is ENI and pods share ENI . Calico for example uses IPtables to have different security 
+for each pod. Do i need to know calico for the exam? at least network policy.
+Trunk and branch ENIs.
+- I bet it's like trunking in networking. 802.1q baby. Directly attached to the pods. => security at the pod level.
+(but not windows nodes) if IPv6 => only fargate. Supported by nitro. 
+
+Controller
+ServiceType=Loadbalancer <- This is our NLB
+ServiceType=Ingress
+
+
+Summary
+- 
+
+
+

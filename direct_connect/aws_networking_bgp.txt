@@ -1,0 +1,181 @@
+Very important for the exam
+
+Longest prefix matches first (I know) - obvious!
+static routes (I know that too)
+(VPN gives you an option to add static routes - I don't remember configuring that specifically)
+Propogated routes
+- DX
+- VPN static routes - now that's confusing: DX Propogated routes take precedence over VPN static routes. ****!!!!****
+- VPN BGP (dynamic) routes 
+
+With multiple DX connections, route is decided by DX routing and BGP communities.
+DX routing policies to influence one decision over another
+Inbound routing policies
+- from on-premises to AWS. All decision are taken on DC end. AWS does not influence.
+Outbound routing policies
+- how AWS sends traffic to your network. 
+- routing policies and BGP communities work differently for Public vs private/transit VIF
+- both allow path selection using most specific and AS_PATH. 
+- where they differ is BGP community tags.
+-- for Public VIF - route propogation scope. Inbound 7224:9100 7224:9200 and 7224:9300
+                                             Outbound 7224:8100 7224:8200 and no tags
+                                             NO_EXPORT
+-- for private/transit VIF - still path selection (what's the difference to propogation scope?)
+                  local preference BGP community tags: 7224:7100 7224:7200 and 7224:7300 (low, medium, high)
+
+more details: Public VIF
+Inbound
+AWS verifies that you own the public prefixes that you want to advertise
+traffic must be destined to AWS / Transit routing is not supported. 
+- on that too, AWS does not advetise you routes to other customers
+DX performs inbound packet filtering - only accepts traffic from where you say.
+- if you have another prefix, it will reject it. 
+Outbound
+AWS advertises all its public address. (I think we can limit this)
+Advertise all public prefixes with NO_EXPORT BGP community tag
+- This seems to mean that you don't advertise AWS to upstream networks.
+- It's not going to allow traffic from prefixes you don't own anyway.
+- But I guess you might want to advertise to upstream addresses that you do own.
+- HERE WE GO: Additionally AWS advertises 7224:8100 7224:8200 
+-- what does that mean? => filter the traffic at customer end. 
+
+From another source (boo). Actually I do think me mention the region thing in passing.
+How is this Inbound?
+7224:9100—Region (local AWS Region)
+7224:9200—Continental (all AWS Regions for a continent) e.g. North America, Asia Pacific, Europe, the Middle East, and Africa.
+7224:9300—Global (all public AWS Regions) - default
+Outbound
+7224:8100—Routes that originate from the same AWS Region in which the AWS Direct Connect point of presence is associated
+7224:8200—Routes that originate from the same continent with which the AWS Direct Connect point of presence is associated
+No tag—Global (all public AWS Regions) - default
+7224:7100—Low preference
+7224:7200—Medium preference
+7224:7300—High preference
+
+131. Public VIF routing scenarios
+Active-Active connection using Public VIF (two DX each with a public VIF)
+public or private ASN
+public ASN: will load balance over both public VIFs if the customer gateway advertises
+            the same prefix with the same BGP attribues on both public VIFs 
+            MED? - Multi-Exit Discriminator. I'm sure I've seen this in an exam question too.
+            Now he mentioned ECMP equal cost multiple path
+private ASN: load balancing on a public VIF is not supported
+
+MED? - Multi-Exit Discriminator. I'm sure I've seen this in an exam question too.
+
+Active-Passive
+public ASN: similar to active-active but longer AS path for secondary. I know this.
+he says also increase the local-pref to be sure the on-premises router chose correct path. Is this the same as AS_PATH?
+- other source say loca-pref is iBGP attribute for controlling outbound traffic. 
+-- higher is a higher number in this case. 200 is preferred over 100.
+- AS_PATH is inbound traffic. Nice.
+private ASN: It seems it is controlled by longest prefix only
+- Is the AS_PATH no applicable? I guess not for private ASN. No BGP path.
+- still local-pref for DC->AWS
+
+132. Public VIF BGP communities. 
+Different for Private
+influence scope - finally an explanation of the above. 
+- ok but who sets them? 
+Inbound. Received from customer router and advertised into AWS.
+e.g. 7224:9100 -> Advertised into AWS local region. Not other regions.
+Outbound. Sent by AWS to the customer router
+e.g. 7224:8100 -> Routes that originate from the same AWS region in which the DX POP is associated.
+AWS will always associate this tag. But why? We get what we get anyway. 
+- ah we can filter it. Up to us if we want to receive or drop those routes. 
+also NO_EXPORT commuity tag. Don't send to other networks. Obvs. Surely won't work anyway. 
+
+133. Private VIF routing policies and BGP communities. It just goes on and on. JFC.
+Most specific. But remember only so many routes (100?).
+In this case can specify 7224:7100,7224:7200,7224:7300 (high, medium, and low) - perhaps in case same prefix length
+Now he says can prepend AS_PATH for private VIF. Ugh.
+Preference is prefix length (most specific)
+if that is equal: geographically nearest (e.g. us-eas to us-east vs us-west)
+if that is the same, lower network cost - AS_PATH. 
+So not really much difference with private and public. Just order perhaps?
+If still all the same, BGP communities: 7224:7100, 7224:7200, 7224:7300. Seems redundant
+
+134. DX Link Aggregation Groups (LAG)
+Connections must have the same bandwidth
+terminating at the same endpoint
+up to 4 links
+Max 2x100 = 200 Gbps
+I imagine 4x1 Gbps is cheaper than 10 Gbps, especially if you only need 4 Gbps.
+- But wouldn't (say) AGL would sell you a single connection? 
+High availability certainly seems like an expensive option. 
+LAG operational status - operate in active-active 
+- operational connection attribute -> number of connections to consider "up". Important if (say) 3 Gbps is needed.
+- MACSec - secret key - Connection Key Name (CKN) and Connectivity Association Key (CAK)
+-- for existing connections with MACSec set, it will be disassociated and a LAG MACSec will be associated.
+   LAG MACSec is associated with all member connections
+
+135. DX Connection Resiliency. It's so boring.
+No guarantee of 100% connection, fiber cut, router crash...
+If critical, need HA.
+options:
+VPN backup
+Recommended at least two DX connections, usually terminated at different devices/locations, unless LAG.
+Do all regions have multiple DX locations?
+Combination of reliencies based on use (prod/dev). Maximum resilience, High resilience, Development and Test.
+- really, really critical workloads: two locations and two devices in each. Maximum resilience.
+
+136. DX Failure connection with BFD. How fast can we fail over?
+Bi-directional Forwarding Detection. Hello. Detection time <1 second
+- 3 detection count x 300 ms liveness detection
+Otherwise BGP takes up to 90 seconds to detect failure.
+AWS enables BFD by default on DX connections, but user must enable it on their end.
+- he gives bfd example of cisco
+
+137. DX Security and Encryption (VPN over DX and MACSec).
+Layer 3 - VPN over DX  } Why would I chose one over the other?
+Layer 2 - MACSec       } 
+or TLS at layer4. Most desireable (?) 
+Limitations:
+Remember VPN needs a public VIF because tunnel end points are public.
+VGW provides max of 1.25 Gbps per tunnel.
+Use ECMP and terminate on TGW for more bandwidth.
+- I think I'm a bit lost about public addresses on TGW. But I've done a VPN terminated on a TGW. How?
+- public TGW => Public VIF. But I knew this because VPN => public addresses => Public VIF.
+MACSec IEEE 802.1ae - Dedicated only (not hosted) not available at all DX locations,
+- but available for some partners. I guess partners meaning fiber providers rather than hosted connections. Confusing.
+MACSec must be enabled at both ends. Key exchange.
+- should_encrypt tries but falls back to unencrypted in key exchange fails.
+- must_encrypt. if no handshake, no traffic
+- no_encrypt
+
+138. DX support for MTU and Jumbo Frames
+Public VIFs - no Jumbo
+Transit VIFS - 8500
+Private VIFs - 9001
+And furthermore, only propogated routes, not static. WTF.
+
+139. DX Pricing. Might have a question on who pays for what.
+port hour charges DX connection type and capacity
+- Dedicated
+- Hosted
+data transfer out (AWS->DC). Not charge for data transfer in.
+if DX is owned by one account and the VIFs are in another account
+- DX pays port hour charges
+For dedicated: billing start with link is up.
+For hosted: billing starts when accepted.
+More complicated is traffic out billing 
+- paid for account owning the resources sending the traffic.
+- can add "requester pays" option on s3 bucket
+for a transit VIF, last resource to send traffic before DX VIF pays.
+
+140. DX Monitoring using Cloudwatch
+ConnectionState 0 (down) or 1 (up) 
+Bps Egress/Ingress
+Pps Egress/Ingress
+ErrorCount
+LighLevelTx|Rx
+ConnectionEncryptionState 1 (encryption) or 0 (no encryption) MACSec
+Similiar metrics for VIFs
+
+141. DX Troubleshooting - Layer1-4
+Remember things like VLAN ID and AARP tables.
+Also 100 routes for private VIF, 1000 routes for public VIF, or BGP might go down. 
+
+142. DX Architecture - Putting it together.
+
+143. DX Summary and Exam Essentials

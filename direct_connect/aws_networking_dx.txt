@@ -1,0 +1,108 @@
+
+If I could fake a direct-connection
+
+* Set up the physical connection
+
+I understand cross-connections in a data center.
+Do I need to memorize the steps? LOA, CFA etc
+- request, get port and LOA, provider, 
+- different if partner instead of directly to AWS
+- do I need to know the details of the transceivers? 
+- ethernet frame size
+
+oooh what is direct connect classic?
+- connection wizard for resilient connection at multiple locations
+
+can request MACsec at certain locations to encrypt traffic.
+
+must support
+- 802.1Q VLAN tagging - is there anything that doesn't use 801.1Q these days?
+- BGP
+
+But once the physical cable is connection and light is seen...
+WAN/MPLS from my router in the data center to my corporate data center.
+
+* Set up direct connection gateway
+
+There are no charges for using a Direct Connect gateway.
+He makes it sound like only for transit VIFs
+- can connect direct connect router directly to one VPC
+  but need a DX gateway if connecting to mulitple VPCs.
+AWS DX router - Transit VIF - DX gateway - transit gateways one or more. 
+
+* Set up VIFs. Provides logical connectivity.
+
+Hosted VIF is different to Hosted connection.
+- owned by different account e.g. centralized IT team
+- accept the VIF in the VPC I guess. The same for transit gateways but we auto-accept.
+
+VIF parameters
+connection: DX connection or LAG (link aggregation - multiple DXs for more bandwidth)
+type: Private|public|transit VIF
+- cannot create it without a physical connection
+- But I could set up BGP over the VPN.
+vif owner: account number. Could be hosted VIF.
+gateway type for private vif only: virtual private gateway or direct connect gateway
+- is the virtual private gateway for one VPC, not direct as I mentioned above?
+- I think of this like the VPN connection. 
+vlan: not duplicated on same DX. For hosted connection, already provided by partner
+BGP address family: IPv4 ot IPv6 (or both?)
+BGP peer address: 
+- public VIF (Ipv4): /30 allocated by me for the BGP session. AWS if I don't have it (I seem to remember /31)
+- private VIF (IPv4): 169.254.0.0/16 provided by AWS by default. 
+- IPv6: /125 from Amazon. I cannot provide my own.
+BGP ASN: public or private <- VIF parameter. Don't cofuse this with other things.
+BGP MD5 authentication key. AWS will generate if not provided.
+Prefixes to be advertised (public only): 
+jumbo frames: only private (9001) or transit vif (8500). 
+
+Deep dive on public VIFs
+VPN over DX - endpoints are public addresses => public VIF
+
+Private VIF
+Private VIF and VGW must be in the same region => access VPCs in that region too.
+Only 100 prefixeds for BGP session with Private VIF
+propogated routes take precedence over default gateway. obvs. 
+
+Transit VIF
+It is the TGW that is within a region. DX can connect to multiple TGWs in different regions.
+- like inter regional transit gateway peering
+Also multiple DX Gateways to a single TGW. Like for multiple customer DCs.
+- what if DCs are in different regions? Pick a home region. The DX Gateway can connect to other regions.
+
+To be clear: DX gateway was created to connect multiple VPCs over the same direct connect. 
+
+Limits:
+A single DX Gateway can connect 20 VGWs (VPCs). Why wouldn't you use a TGW. 
+Especially as you can't do VPC-VPC routing without it.
+- that might be way, so isolate the VPCs.
+- DCs can't route through the DXG either
+
+Didn't he say the DX and DXG should be in the same region?
+- DX can connect TGW in another region
+
+Up to 4 Transit VIFs per DX. 
+Each transit VIF connects to a Direct connect Gateway. 
+Up to 6 transit gateways per DXG => 24 TGWs per DX. How many regions are there? Only 20. lol.
+TGW has a change per GB.
+
+Also need inter regional transit gateway peering between TGWs. Otherwise don't get inter-VPC routing. 
+Also routing between Customer DCs can by done by TGW/IRTGP. 
+Now also DX sitelink. - connectivity between Customer DCs without going to TGWs.
+Still need a DXG but enabling sitelink on the VIF
+50c/hr plus data transfer. Wow.
+
+#Should I brush up / implement BGP routing at home?
+#- with VPN
+# advertise route from FortiGate. Can I do that? It's more than I want to learn BPG on FG.
+
+
+
+
+
+
+
+
+
+
+

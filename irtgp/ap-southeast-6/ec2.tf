@@ -1,0 +1,135 @@
+/*
+  Create an EC2 in the Woznet VPC.
+*/
+
+data "aws_ami" "amznix2" {
+  most_recent = true
+
+  filter {
+    name   = "name"
+    values = ["al2023-ami-*-x86_64"]
+  }
+
+  owners = ["amazon"]
+}
+
+resource "aws_instance" "ec2_public" {
+  ami           = data.aws_ami.amznix2.id
+  instance_type = "${local.ec2_type}"
+
+  iam_instance_profile = data.terraform_remote_state.iam.outputs.ec2_common_profile_name
+
+  key_name = "${local.keypair}"
+  associate_public_ip_address = true
+  vpc_security_group_ids = [aws_security_group.woznet-public-sg.id]
+  subnet_id = aws_subnet.woznet_subnet_public_1a.id
+  #user_data = data.template_file.user_data.rendered
+  user_data     = <<-EOF
+    #!/bin/bash
+    aws s3 cp s3://ourzoo.us/user_data.sh - | sh
+  EOF
+
+  root_block_device {
+    volume_size = 30
+    encrypted   = true
+  }
+
+  metadata_options {
+    http_endpoint = "enabled"
+    http_tokens = "required"
+    instance_metadata_tags = "enabled"
+  }
+
+  tags = {
+    Name = "${local.ec2_name}"
+  }
+}
+
+resource "aws_route53_record" "ec2-pub" {
+  zone_id = "Z07643963KV3I332WTGCB"
+  name    = "${local.ec2_name}-pub.kinaida.net"
+  type    = "A"
+  ttl     = "60"
+  records = [aws_instance.ec2_public.public_ip]
+}
+
+resource "aws_instance" "ec2_private" {
+  ami           = data.aws_ami.amznix2.id
+  instance_type = "${local.ec2_type}"
+ 
+  iam_instance_profile = data.terraform_remote_state.iam.outputs.ec2_common_profile_name
+ 
+  key_name = "${local.keypair}"
+  associate_public_ip_address = false
+  vpc_security_group_ids = [aws_security_group.woznet-private-sg.id]
+  subnet_id = aws_subnet.woznet_subnet_private_1a.id
+  #user_data = data.template_file.user_data.rendered
+  user_data     = <<-EOF
+    #!/bin/bash
+    aws s3 cp s3://ourzoo.us/user_data.sh - | sh
+  EOF
+ 
+  root_block_device {
+    volume_size = 30
+    encrypted   = true
+  }
+ 
+  metadata_options {
+    http_endpoint = "enabled"
+    http_tokens = "required"
+    instance_metadata_tags = "enabled"
+  }
+ 
+  tags = {
+    Name = "${local.location}-private-ec2"
+  }
+}
+
+resource "aws_route53_record" "ec2-priv1" {
+  zone_id = "Z07643963KV3I332WTGCB"
+  name    = "${local.ec2_name}-priv1.kinaida.net"
+  type    = "A"
+  ttl     = "60"
+  records = [aws_instance.ec2_private.private_ip]
+}
+
+resource "aws_instance" "ec2_private2" {
+  ami           = data.aws_ami.amznix2.id
+  instance_type = "${local.ec2_type}"
+ 
+  iam_instance_profile = data.terraform_remote_state.iam.outputs.ec2_common_profile_name
+ 
+  key_name = "${local.keypair}"
+  associate_public_ip_address = false
+  vpc_security_group_ids = [aws_security_group.woznet2-private-sg.id]
+  subnet_id = aws_subnet.woznet2_subnet_private_1a.id
+  #user_data = data.template_file.user_data.rendered
+  user_data     = <<-EOF
+    #!/bin/bash
+    aws s3 cp s3://ourzoo.us/user_data.sh - | sh
+  EOF
+ 
+  root_block_device {
+    volume_size = 30
+    encrypted   = true
+  }
+ 
+  metadata_options {
+    http_endpoint = "enabled"
+    http_tokens = "required"
+    instance_metadata_tags = "enabled"
+  }
+ 
+  tags = {
+    Name = "${local.location}-private2-ec2"
+  }
+}
+
+resource "aws_route53_record" "ec2-priv2" {
+  zone_id = "Z07643963KV3I332WTGCB"
+  name    = "${local.ec2_name}-priv2.kinaida.net"
+  type    = "A"
+  ttl     = "60"
+  records = [aws_instance.ec2_private2.private_ip]
+}
+
