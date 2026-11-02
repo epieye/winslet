@@ -4,8 +4,8 @@
 #
 #
 
-resource "aws_iam_role" "ec2_policy" {
-  name = "ec2_policy"
+resource "aws_iam_role" "alb_policy" {
+  name = "alb_policy"
 
   #managed_policy_arns   =  [
   #  "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole" # Is there a managed policy arn for EC2?
@@ -27,9 +27,9 @@ resource "aws_iam_role" "ec2_policy" {
 EOF
 }
 
-resource "aws_iam_role_policy" "ec2_policy" {
+resource "aws_iam_role_policy" "alb_policy" {
   name = "allow_ec2_to_access_things"
-  role = aws_iam_role.ec2_policy.id
+  role = aws_iam_role.alb_policy.id
 
   policy = jsonencode({
     Version = "2012-10-17"
@@ -81,6 +81,6 @@ resource "aws_iam_role_policy" "ec2_policy" {
 }
 
 resource "aws_iam_instance_profile" "ec2_profile" {
-  name = "ec2_policy_profile"
-  role = aws_iam_role.ec2_policy.name
+  name = "alb_policy_profile"
+  role = aws_iam_role.alb_policy.name
 }

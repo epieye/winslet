@@ -1,5 +1,5 @@
 resource "aws_instance" "michio" {
-  ami           = data.aws_ami.amznix2.id
+  ami           = "ami-077e4fe657a374a2d" # data.aws_ami.amznix2.id
   instance_type = "t2.micro"
 
   iam_instance_profile = aws_iam_instance_profile.ec2_profile.name
@@ -8,12 +8,27 @@ resource "aws_instance" "michio" {
   associate_public_ip_address = false
   vpc_security_group_ids = [aws_security_group.woznet-private-sg.id]
   subnet_id = aws_subnet.woznet_subnet_private_1a.id
-  ipv6_address_count = 1
-  #user_data = data.template_file.user_data.rendered
-  #user_data = data.aws_s3_object.remote_user_data.body
+
   user_data     = <<-EOF
     #!/bin/bash
-    aws s3 cp s3://ourzoo.us/user_data.sh - | sh
+    #aws s3 cp s3://ourzoo.us/user_data.sh - | sh
+
+    export PATH=$PATH:/usr/local/bin:/usr/bin
+    export AWS_METADATA_SERVICE_TIMEOUT=10
+    export AWS_METADATA_SERVICE_NUM_ATTEMPTS=5
+
+    # Retry loop to wait for the private subnet routing table to link up to S3
+    for i in {1..5}; do
+      # Fetch the script safely to a temp file first, specifying the regional endpoint
+      /usr/bin/aws s3 cp s3://ourzoo.us/user_data.sh /tmp/user_data.sh --region us-east-1
+      if [ $? -eq 0 ]; then
+        chmod +x /tmp/user_data.sh
+        /bin/bash /tmp/user_data.sh
+        break
+      fi
+      echo "S3 connection not ready, retrying in 5 seconds..."
+      sleep 5
+    done
   EOF
 
   root_block_device {
@@ -25,6 +40,12 @@ resource "aws_instance" "michio" {
     http_endpoint = "enabled"
     instance_metadata_tags = "enabled"
   }
+
+  # Forces Terraform to wait until routing and NAT gateways are fully ready
+  depends_on = [
+    aws_nat_gateway.woznet-ngw-a,
+    aws_route_table_association.woznet_subnet_private_1a
+  ]
 
   tags = {
     Name = "michio"
@@ -39,11 +60,11 @@ resource "aws_route53_record" "michio" {
   records = [aws_instance.michio.private_ip]
 }
 
-resource "aws_route53_record" "michio_v6" {
- zone_id = "Z07643963KV3I332WTGCB"
-  name    = "michio.kinaida.net"
-  type    = "AAAA"
-  ttl     = "60"
-  records = [aws_instance.michio.ipv6_addresses[0]]
-}
+#resource "aws_route53_record" "michio_v6" {
+# zone_id = "Z07643963KV3I332WTGCB"
+#  name    = "michio.kinaida.net"
+#  type    = "AAAA"
+#  ttl     = "60"
+#  records = [aws_instance.michio.ipv6_addresses[0]]
+#}
 

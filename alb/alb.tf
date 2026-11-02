@@ -8,6 +8,12 @@ resource "aws_lb" "woznet_alb" {
   drop_invalid_header_fields = true
   enable_deletion_protection = false
 
+  #access_logs {
+  #  bucket  = ""
+  #  enabled = true
+  #  prefix = ""
+  #}
+
   tags = {
     Name = "woznet-alb"
   }

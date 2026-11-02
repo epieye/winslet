@@ -1,5 +1,5 @@
-resource "aws_lb_target_group" "woznet-http-tg" {
-  name        = "woznet-http-tg"
+resource "aws_lb_target_group" "woznet-tg" {
+  name        = "michio-http-tg"
   port        = 80
   protocol    = "HTTP"
   target_type = "ip"
@@ -18,15 +18,15 @@ resource "aws_lb_target_group" "woznet-http-tg" {
   }
 }
 
-resource "aws_lb_target_group_attachment" "woznet-http-tga2" {
-  target_group_arn = aws_lb_target_group.woznet-http-tg.arn          
+resource "aws_lb_target_group_attachment" "woznet-target-michio" {
+  target_group_arn = aws_lb_target_group.woznet-tg.arn          
   target_id        = aws_instance.michio.private_ip
   port             = 80
   availability_zone = "us-east-1a" # cannot be all when it's in the same VPC
 }
 
-resource "aws_lb_target_group_attachment" "woznet-http-tga1" {
-  target_group_arn = aws_lb_target_group.woznet-http-tg.arn
+resource "aws_lb_target_group_attachment" "woznet-target-esteban" {
+  target_group_arn = aws_lb_target_group.woznet-tg.arn
   target_id        = aws_instance.esteban.private_ip
   port             = 80
   availability_zone = "us-east-1b" # cannot be all when it's in the same VPC

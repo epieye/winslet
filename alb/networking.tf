@@ -7,7 +7,7 @@ resource "aws_vpc" "woznet_vpc" {
   enable_dns_support   = "true"
   enable_dns_hostnames = "true"
 
-  assign_generated_ipv6_cidr_block = true
+  assign_generated_ipv6_cidr_block = false
     
   tags = {
     Name = "woznet-vpc"
@@ -24,7 +24,7 @@ resource "aws_internet_gateway" "woznet-igw" {
 resource "aws_subnet" "woznet_subnet_public_1a" {
   vpc_id = aws_vpc.woznet_vpc.id
   cidr_block = "192.168.12.0/27"
-  ipv6_cidr_block      = cidrsubnet(aws_vpc.woznet_vpc.ipv6_cidr_block, 8, 0)
+  #ipv6_cidr_block      = cidrsubnet(aws_vpc.woznet_vpc.ipv6_cidr_block, 8, 0)
   availability_zone = "us-east-1a"
 
   map_public_ip_on_launch = "true"
@@ -37,7 +37,7 @@ resource "aws_subnet" "woznet_subnet_public_1a" {
 resource "aws_subnet" "woznet_subnet_public_1b" {
   vpc_id = aws_vpc.woznet_vpc.id
   cidr_block = "192.168.12.32/27"
-  ipv6_cidr_block      = cidrsubnet(aws_vpc.woznet_vpc.ipv6_cidr_block, 8, 1)
+  #ipv6_cidr_block      = cidrsubnet(aws_vpc.woznet_vpc.ipv6_cidr_block, 8, 1)
   availability_zone = "us-east-1b"
 
   map_public_ip_on_launch = "true" 
@@ -50,7 +50,7 @@ resource "aws_subnet" "woznet_subnet_public_1b" {
 resource "aws_subnet" "woznet_subnet_private_1a" {
   vpc_id = aws_vpc.woznet_vpc.id
   cidr_block = "192.168.12.128/27"
-  ipv6_cidr_block      = cidrsubnet(aws_vpc.woznet_vpc.ipv6_cidr_block, 8, 2)
+  #ipv6_cidr_block      = cidrsubnet(aws_vpc.woznet_vpc.ipv6_cidr_block, 8, 2)
   availability_zone = "us-east-1a"
   map_public_ip_on_launch = "false"
 
@@ -62,7 +62,7 @@ resource "aws_subnet" "woznet_subnet_private_1a" {
 resource "aws_subnet" "woznet_subnet_private_1b" {
   vpc_id = aws_vpc.woznet_vpc.id
   cidr_block = "192.168.12.160/27"
-  ipv6_cidr_block      = cidrsubnet(aws_vpc.woznet_vpc.ipv6_cidr_block, 8, 3)
+  #ipv6_cidr_block      = cidrsubnet(aws_vpc.woznet_vpc.ipv6_cidr_block, 8, 3)
   availability_zone = "us-east-1b"
   map_public_ip_on_launch = "false"
 
@@ -128,14 +128,12 @@ resource "aws_security_group" "woznet-public-sg" {
     to_port = 0
     protocol = -1
     cidr_blocks = ["0.0.0.0/0"]
-    ipv6_cidr_blocks = ["::/0"] 
   }
   ingress {
     from_port = 22
     to_port = 22
     protocol = "tcp"
     cidr_blocks = ["32.141.185.206/32", "172.125.57.137/32"]
-    ipv6_cidr_blocks = ["2600:1700:3b20:6ff0:e2cb:4eff:fefc:14bb/128"] 
   }
   ingress {
     from_port = 80
@@ -154,11 +152,6 @@ resource "aws_security_group" "woznet-public-sg" {
     to_port = -1
     protocol = "icmp"
     cidr_blocks = ["32.141.185.206/32", "172.125.57.137/32"]
-  }
-  ingress {
-    from_port = -1
-    to_port = -1
-    protocol = "icmp"
   }
 
   tags = {
@@ -193,10 +186,9 @@ resource "aws_security_group" "woznet-public-sg" {
 #}
 
 resource "aws_security_group" "woznet-private-sg" {
+  name = "woznet-private-sg"
   description = "Bobs Internet Service"
   vpc_id = aws_vpc.woznet_vpc.id
-
-  # How do I stop it from being called terraform-20230906203909438500000004 ?
 
   egress {
     from_port = 0
@@ -239,11 +231,6 @@ resource "aws_route_table" "woznet-rtb" {
 
   route {
     cidr_block = "0.0.0.0/0" 
-    gateway_id = aws_internet_gateway.woznet-igw.id
-  }
-
-  route {
-    ipv6_cidr_block = "::/0"
     gateway_id = aws_internet_gateway.woznet-igw.id
   }
 
@@ -324,7 +311,7 @@ data "aws_ami" "amznix2" {
 }
 
 resource "aws_instance" "amos" {
-  ami           = data.aws_ami.amznix2.id
+  ami           = "ami-077e4fe657a374a2d" # data.aws_ami.amznix2.id
   instance_type = "t2.micro"
 
   iam_instance_profile = aws_iam_instance_profile.ec2_profile.name
@@ -333,7 +320,7 @@ resource "aws_instance" "amos" {
   associate_public_ip_address = true
   vpc_security_group_ids = [aws_security_group.woznet-public-sg.id]
   subnet_id = aws_subnet.woznet_subnet_public_1a.id
-  ipv6_address_count = 1
+  #ipv6_address_count = 1
   #user_data = data.template_file.user_data.rendered
   #user_data = data.aws_s3_object.remote_user_data.body
   user_data     = <<-EOF
@@ -367,12 +354,12 @@ resource "aws_route53_record" "amos" {
   records = [aws_instance.amos.public_ip]
 }
 
-resource "aws_route53_record" "amos_v6" {
- zone_id = "Z07643963KV3I332WTGCB"
-  name    = "amos.kinaida.net"
-  type    = "AAAA"
-  ttl     = "60"
-  records = [aws_instance.amos.ipv6_addresses[0]]
-}
+#resource "aws_route53_record" "amos_v6" {
+# zone_id = "Z07643963KV3I332WTGCB"
+#  name    = "amos.kinaida.net"
+#  type    = "AAAA"
+#  ttl     = "60"
+#  records = [aws_instance.amos.ipv6_addresses[0]]
+#}
 
 
